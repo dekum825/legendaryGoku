@@ -385,6 +385,52 @@ html {
    ========================================= */
 @media (max-width: 768px) {
 
+    /* =========================================
+   MOBILE FIXES (Add to bottom of style.css)
+   ========================================= */
+@media (max-width: 768px) {
+
+    /* 1. FIX THE LOGO (Stop it from blocking text) */
+    .sticky-goku-header {
+        position: absolute; /* Stops it from following you on mobile if you prefer */
+        /* OR keep 'sticky' but make it smaller: */
+        /* position: sticky; */ 
+        width: 100%;
+        padding: 10px 0; /* Tighten padding */
+        text-align: center; /* Force center alignment */
+        background: transparent; /* Ensure no background blocks view */
+    }
+
+    .goku-logo-img {
+        height: 60px !important; /* Force it SMALL */
+        width: auto !important;
+        margin: 0 auto;
+    }
+
+    /* 2. FIX THE ASCEND BUTTON LOCATION */
+    /* We override the 'justify-content-end' from desktop */
+    #intro div {
+        flex-direction: column !important; /* Stack vertically */
+        justify-content: flex-end !important; /* Push everything to bottom */
+        align-items: center !important; /* Center horizontally */
+        padding-right: 0 !important; /* Remove desktop padding */
+        padding-left: 0 !important;
+        padding-bottom: 15vh !important; /* Lift it 15% from bottom of screen */
+    }
+
+    #activate-btn {
+        margin-top: 0 !important;
+        transform: scale(0.9); /* Slightly smaller button for phone */
+    }
+    
+    /* 3. ENSURE TEXT IS VISIBLE */
+    .goku-title { 
+        /* In case you switch back to text instead of image */
+        font-size: 3rem !important;
+        text-align: center;
+        width: 100%;
+    }
+}
     /* 1. FIX THE LOGO SIZE */
     /* Prevents the logo from being wider than the phone screen */
     .goku-logo-img {
