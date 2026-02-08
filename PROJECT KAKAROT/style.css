@@ -457,6 +457,34 @@ html {
         padding: 12px;
         font-size: 1.1rem;
     }
+    /* =========================================
+   MOBILE VIDEO FIX (Add to bottom of style.css)
+   ========================================= */
+@media (max-width: 768px) {
+
+    /* 1. LOCK THE CONTAINER HEIGHT */
+    /* This stops the "Address Bar Jump" glitch */
+    .video-background-manager {
+        height: 100vh; /* Fallback for old phones */
+        height: 100dvh; /* Dynamic Height: Ignores the address bar resizing */
+        position: fixed; /* double-check it stays stuck */
+    }
+
+    /* 2. FORCE BOTH VIDEOS TO BE IDENTICAL */
+    .bg-video {
+        width: 100vw !important; /* Force full width */
+        height: 100dvh !important; /* Force full dynamic height */
+        
+        /* 3. FIX THE CROPPING (The "Zoom" Issue) */
+        /* 'cover' fills the screen. If video B is zooming too much, 
+           we anchor it to the CENTER so it doesn't drift. */
+        object-fit: cover !important;
+        object-position: center center !important; 
+    }
+
+    /* Optional: If Video B is still too zoomed in, you can cheat 
+       and use 'contain' just for mobile, but it adds black bars. 
+       Stick with 'cover' first! */
 }
     /* 1. FIX THE LOGO SIZE */
     /* Prevents the logo from being wider than the phone screen */
