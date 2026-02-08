@@ -1,0 +1,382 @@
+/* ADD THIS TO STYLE.CSS */
+
+/* 1. Global Smooth Scroll Enforcement */
+html {
+    scroll-behavior: smooth;
+}
+
+/* 2. Transition Logic */
+/* When we add 'launch-mode' via JS, the intro fades out */
+.launch-mode #intro {
+    opacity: 0;
+    transform: translateY(-100px); /* Moves up while fading */
+    transition: all 1s ease-in-out;
+}
+
+/* ASCEND "POWER UP" BUTTON */
+#activate-btn {
+    font-family: 'Bangers', cursive;
+    font-size: 2rem;
+    letter-spacing: 2px;
+    color: #000; /* Black text on bright background for contrast */
+    background: linear-gradient(to bottom, #FFD600, #FF8C00); /* Yellow-to-Orange gradient */
+    border: 3px solid #e74c3c; /* Red border */
+    border-radius: 50px; /* Rounded "capsule" shape */
+    padding: 15px 50px;
+    
+    /* A pulsing energy glow */
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.6), inset 0 0 10px rgba(255, 255, 255, 0.5);
+    
+    transition: all 0.2s ease-in-out;
+}
+/* ANIMATION: The "Sliding Launch" Effect */
+.launching-btn {
+    /* 1. MOVE: Slide 300px to the right (off the screen edge) */
+    transform: translateX(300px) scale(0.8) !important;
+    
+    /* 2. FADE: Disappear while moving */
+    opacity: 0 !important;
+    
+    /* 3. SPEED: Accelerate out (ease-in) */
+    transition: all 0.6s ease-in !important;
+    
+    /* Optional: Prevent clicking it again while it's moving */
+    pointer-events: none;
+}
+
+/* Hover Effect: Brightens and glows more */
+#activate-btn:hover {
+    transform: scale(1.05); /* Slight grow */
+    background: linear-gradient(to bottom, #ffff00, #ffaa00);
+    box-shadow: 0 0 40px rgba(255, 215, 0, 1), 0 0 10px #fff;
+    cursor: pointer;
+}
+/* 1. LAYERING THE VIDEOS */
+.video-background-manager {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1; /* Keeps videos behind everything */
+}
+
+.bg-video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: opacity 1.5s ease-in-out; /* The cross-fade effect */
+}
+
+/* Initially, Video A is visible and Video B is hidden */
+.video-a { opacity: 1; z-index: 1; }
+.video-b { opacity: 0; z-index: 0; }
+
+/* When we scroll, we swap them */
+.scrolled-mode .video-a { opacity: 0; }
+.scrolled-mode .video-b { opacity: 1; }
+
+
+/* 2. THE STICKY HEADER (Updated Location) */
+.sticky-goku-header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    padding: 20px 50px; /* 20px top, 50px left/right */
+    text-align: left;   /* Moves title to the Left side */
+    width: 100%;
+}
+/* DRAGON BALL Z STYLE TITLE */
+/* LOGO IMAGE STYLING (Transparency Fix) */
+.goku-logo-img {
+    height: 150px; /* Start BIG */
+    width: auto;
+    
+    /* ANIMATION: Smoothly shrinks */
+    transition: all 0.5s ease;
+    
+    /* THE MAGIC TRICK: Makes white background transparent */
+    mix-blend-mode: multiply; 
+    
+    /* OPTIONAL: Boost brightness so it pops against the video */
+    filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.8)) brightness(1.2);
+    
+    /* Ensure it sits nicely */
+    display: block;
+}
+
+/* SCROLLED STATE (Shrink) */
+.scrolled-mode .goku-logo-img {
+    height: 70px; /* Shrinks down */
+    mix-blend-mode: normal; /* Sometimes looks better normal when small */
+    /* If normal looks like a white box again, keep it as 'multiply' */
+}
+/* 3. THE AUTO-CROSSFADE GALLERY */
+.auto-crossfade-gallery {
+    position: relative;
+    height: 400px;
+    width: 100%;
+    margin-top: 2rem;
+}
+
+.fade-img {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    height: 100%;
+    width: auto;
+    opacity: 0;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    animation: crossfade 12s infinite; /* 12s total loop */
+}
+
+/* Staggering the images in the loop */
+.fade-img:nth-child(1) { animation-delay: 0s; }
+.fade-img:nth-child(2) { animation-delay: 3s; }
+.fade-img:nth-child(3) { animation-delay: 6s; }
+.fade-img:nth-child(4) { animation-delay: 9s; }
+
+@keyframes crossfade {
+    0% { opacity: 0; }
+    15% { opacity: 1; }
+    35% { opacity: 1; }
+    50% { opacity: 0; }
+    100% { opacity: 0; }
+}
+
+/* 1. CONTAINER SETUP */
+.gallery-row {
+    overflow: hidden; /* Hides the scrollbar */
+    width: 100vw;     /* Full screen width */
+    margin-bottom: 20px;
+    position: relative;
+    display: flex;
+}
+
+.gallery-track {
+    display: flex;
+    /* max-content ensures the track is as wide as ALL images combined */
+    width: max-content; 
+    /* This connects the duplicates directly to the originals */
+}
+
+/* 2. IMAGE STYLING (Your custom size) */
+.gallery-track img {
+    width: 220px !important;
+    height: 130px !important;
+    object-fit: cover;
+    margin-right: 25px; /* Creates the gap between images */
+    border-radius: 10px;
+    border: 2px solid #fff;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.6), 0 0 20px rgba(241,196,15,0.7);
+}
+
+/* 3. INFINITE SCROLL ANIMATION */
+.track-left {
+    animation: scrollLoopLeft 20s linear infinite;
+}
+
+@keyframes scrollLoopLeft {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); } 
+    /* We stop at 50% because that is exactly where the duplicate set starts.
+       It snaps back to 0 instantly, creating the illusion of a loop. */
+}
+.acknowledgement-card {
+    background: rgba(0, 0, 0, 0.85); /* Darker for readability */
+    border: 3px solid #F1C40F; /* Saiyan Gold */
+    border-radius: 20px;
+    box-shadow: 0 0 40px rgba(241, 196, 15, 0.3); /* Aura Glow */
+    backdrop-filter: blur(15px);
+}
+
+.creator-name {
+    font-size: 1.5rem;
+    color: white;
+}
+
+.creator-name span {
+    color: #F85C1B; /* Dragon Ball Orange */
+    font-weight: bold;
+    text-shadow: 0 0 10px rgba(248, 92, 27, 0.6);
+}
+
+.tech-list li {
+    color: #ddd;
+    margin-bottom: 10px;
+    font-family: 'Roboto', sans-serif;
+}
+
+.disclaimer {
+    font-size: 0.8rem;
+    color: #777;
+    font-style: italic;
+}
+/* Custom Dragon Ball Theme for Cards */
+.anime-card {
+    background: rgba(0, 0, 0, 0.7) !important; /* Darker for high contrast */
+    border: 2px solid #F1C40F !important; /* Saiyan Gold Border */
+    border-radius: 15px;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    cursor: pointer;
+    overflow: hidden;
+    position: relative;
+}
+
+/* The Saiyan Aura Glow */
+.anime-card:hover {
+    transform: scale(1.05) translateY(-10px);
+    border-color: #F85C1B !important; /* Changes to Orange on hover */
+    box-shadow: 0 0 20px #F1C40F, 0 0 40px rgba(248, 92, 27, 0.4);
+}
+
+.card-title {
+    font-family: 'Bangers', cursive; /* Aggressive Anime Font */
+    letter-spacing: 2px;
+    font-size: 1.8rem;
+    color: #F1C40F;
+    text-shadow: 2px 2px 0px #000;
+}
+
+/* Adding a "Power" stripe behind the title */
+.card-body {
+    background: linear-gradient(45deg, transparent, rgba(241, 196, 15, 0.1), transparent);
+}
+/* 1. Force Gallery to Full Width */
+.gallery-wrapper {
+    width: 100vw; /* Explicitly full viewport width */
+    overflow: hidden; /* Prevents scrollbars from appearing */
+    position: relative;
+    left: 0;
+}
+
+/* 2. The Image Styling with "Shadow Shadow" Effect */
+.gallery-track img {
+    width: 300px;  /* Make them wide enough to see clearly */
+    height: 180px;
+    object-fit: cover;
+    margin-right: 20px;
+    border-radius: 10px;
+    border: 2px solid #F1C40F; /* Gold Border */
+    
+    /* THE SHADOW EFFECT */
+    /* Layer 1: Black shadow for depth (drops down) */
+    /* Layer 2: Gold glow for energy (surrounds image) */
+    box-shadow: 
+        0 10px 20px rgba(0, 0, 0, 0.8), 
+        0 0 25px rgba(241, 196, 15, 0.6); 
+
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Optional: Make it pop even more on hover */
+.gallery-track img:hover {
+    transform: scale(1.1);
+    box-shadow: 
+        0 15px 30px rgba(0, 0, 0, 1), 
+        0 0 40px rgba(241, 196, 15, 1);
+}
+/* RETURN "NIMBUS" BUTTON */
+#back-btn {
+    font-family: 'Bangers', cursive;
+    font-size: 1.4rem;
+    letter-spacing: 1px;
+    color: #FFD600; /* Yellow text */
+    background: rgba(231, 76, 60, 0.2); /* Semi-transparent red/orange */
+    border: 2px solid #FFD600; /* Yellow border */
+    border-radius: 30px;
+    padding: 10px 30px;
+    margin-top: 20px;
+    
+    /* A subtler, steady glow */
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+    
+    transition: all 0.3s ease;
+}
+
+/* Hover Effect: Fills with energy */
+#back-btn:hover {
+    background: #FFD600; /* Fills with yellow */
+    color: #c0392b; /* Text turns dark red */
+    box-shadow: 0 0 30px rgba(255, 215, 0, 0.8);
+    transform: translateY(-3px); /* Floats up slightly */
+}
+/* HIDDEN STATE */
+.btn-hidden {
+    opacity: 0 !important;
+    pointer-events: none; /* Prevents clicking while hidden */
+    transform: translateY(20px); /* Moves it down slightly */
+    transition: all 0.5s ease;
+}
+/* =========================================
+   PHASE 5: ROTATE DEVICE OVERLAY
+   ========================================= */
+
+/* Default: Hidden on desktops and landscape phones */
+#rotate-device-overlay {
+    display: none; 
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: #000; /* Black background */
+    z-index: 9999; /* Sits on top of EVERYTHING */
+    color: #F1C40F; /* Saiyan Gold text */
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+/* The Animation Icon */
+.phone-icon {
+    font-size: 4rem;
+    margin-bottom: 20px;
+    animation: rotate-animation 2s infinite ease-in-out;
+}
+
+@keyframes rotate-animation {
+    0% { transform: rotate(0deg); }
+    50% { transform: rotate(90deg); } /* Simulate turning phone */
+    100% { transform: rotate(0deg); }
+}
+
+/* ANIMATION 1: The "Sliding Launch" Button */
+.launching-btn {
+    /* Moves the button to the RIGHT (300px) and fades it out */
+    transform: translateX(300px) scale(0.8) !important; 
+    opacity: 0 !important;
+    transition: all 0.6s ease-in !important; /* fast acceleration */
+    pointer-events: none; /* Prevents double-clicking */
+}
+/* ANIMATION 2: The "Rising Train" Gallery */
+.gallery-wrapper {
+    /* DEFAULT STATE: Hidden down below */
+    transform: translateY(300px); /* Pushed down 300px */
+    opacity: 0; /* Invisible */
+    transition: all 1s ease-out; /* Smooth 1-second rise */
+}
+
+/* ACTIVE STATE: Rises to normal position */
+.gallery-active {
+    transform: translateY(0) !important; /* Moves up to natural spot */
+    opacity: 1 !important; /* Becomes visible */
+}
+
+/* THE TRIGGER: Only show this on Portrait Mobile Screens */
+@media screen and (orientation: portrait) and (max-width: 900px) {
+    #rotate-device-overlay {
+        display: flex; /* Turn it on! */
+    }
+    
+    /* Hide the main scrollbar so they can't scroll away */
+    body {
+        overflow: hidden;
+    }
+}
