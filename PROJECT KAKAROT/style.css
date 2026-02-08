@@ -3,8 +3,9 @@
 /* 1. Global Smooth Scroll Enforcement */
 html {
     scroll-behavior: smooth;
-    overflow-x: hidden; /* Stops side-to-side scrolling */
+    overflow-x: hidden; /* Prevents horizontal scrolling on mobile */
 }
+
 /* 2. Transition Logic */
 /* When we add 'launch-mode' via JS, the intro fades out */
 .launch-mode #intro {
@@ -89,7 +90,7 @@ html {
     text-align: left;   /* Moves title to the Left side */
     width: 100%;
 }
-
+/* DRAGON BALL Z STYLE TITLE */
 /* LOGO IMAGE STYLING (Transparency Fix) */
 .goku-logo-img {
     height: 150px; /* Start BIG */
@@ -247,7 +248,6 @@ html {
 .card-body {
     background: linear-gradient(45deg, transparent, rgba(241, 196, 15, 0.1), transparent);
 }
-
 /* 1. Force Gallery to Full Width */
 .gallery-wrapper {
     width: 100vw; /* Explicitly full viewport width */
@@ -382,134 +382,81 @@ html {
     }
 }
 
+/* =========================================
+   FINAL MOBILE FIX (Replace the bottom of style.css with this)
+   ========================================= */
 @media (max-width: 768px) {
 
-    /* 1. FIX THE OVERLAP (The most important part) */
-    /* We change 'sticky' to 'absolute'. 
-       This keeps the logo at the top of the Intro, 
-       but it WON'T scroll down and cover your text. */
+    /* 1. FIX THE HEADER OVERLAP (The most important fix) */
+    /* switching to 'absolute' means it stays at the top and 
+       SCROLLS AWAY so it doesn't block your reading */
     .sticky-goku-header {
         position: absolute !important; 
         top: 0;
         left: 0;
         width: 100%;
-        padding: 15px 0;
-        z-index: 10; /* Keeps it above the video */
+        padding: 10px 0; /* Less padding */
         background: transparent;
-    }
-    .phone-icon {
-    font-size: 4rem;
-    margin-bottom: 20px;
-    animation: rotate-animation 2s infinite ease-in-out;
+        z-index: 50; 
     }
 
-    /* Force the logo to be small and centered */
+    /* Force the Logo Small & Centered */
     .goku-logo-img {
         height: 60px !important;
         width: auto !important;
         display: block;
-        margin: 0 auto;
+        margin: 10px auto; 
     }
 
-    /* 2. FIX THE BIOGRAPHY LAYOUT (Where you circled) */
-    /* Give the text room to breathe now that the logo is gone */
+    /* 2. FIX THE ASCEND BUTTON (Mobile Position) */
+    /* Targeting the new class .mobile-intro-layout we added in HTML */
+    .mobile-intro-layout {
+        flex-direction: column !important;
+        justify-content: flex-end !important; /* Push to bottom */
+        align-items: center !important; /* Center Horizontally */
+        padding-right: 0 !important;
+        padding-bottom: 20vh !important; /* Lift it up for your thumb */
+    }
+    
+    #activate-btn {
+        transform: scale(0.9); /* Slightly smaller */
+    }
+
+    /* 3. FIX THE BIOGRAPHY TEXT (Clear space) */
     #biography .container-fluid {
-        justify-content: flex-start !important; /* Align content to top */
-        padding-top: 40px !important; /* Add space at the very top */
-        padding-left: 20px !important;
-        padding-right: 20px !important;
+        justify-content: flex-start !important; /* Start content at top */
+        padding-top: 80px !important; /* Push down so it doesn't touch top edge */
     }
 
-    /* Make the text box fill the screen properly */
     .content-wrapper {
-        width: 100% !important;
-        margin: 0 !important;
+        width: 90% !important; /* Use almost full width */
+        margin: 0 auto 20px auto !important; /* Center it */
         padding: 0 !important;
-        text-align: center !important; /* Center text looks better on mobile */
     }
 
     .glass-card {
-        padding: 20px 10px !important; /* Comfortable padding inside the box */
-        background: rgba(0, 0, 0, 0.6); /* Make text readable against background */
-        border-radius: 15px;
+        padding: 15px !important;
+        text-align: center; /* Center text is easier to read on phone */
     }
 
-    /* 3. FIX THE INTRO BUTTON */
-    /* Keeps the Ascend button accessible at the bottom */
-    #intro div {
-        flex-direction: column !important;
-        justify-content: flex-end !important;
-        align-items: center !important;
-        padding-bottom: 15vh !important; /* Lifted up for thumb access */
-        padding-right: 0 !important;
-        padding-left: 0 !important;
+    /* 4. FIX THE VIDEO JUMP (The 'White Bar' Fix) */
+    .video-background-manager {
+        height: 100dvh !important; /* Dynamic height fixes address bar glitches */
     }
     
-    /* 4. FIX THE RETURN BUTTON */
-    /* Make it big and easy to tap */
-    #back-btn {
-        width: 80%; /* Wide button */
-        margin-top: 20px;
-        padding: 12px;
-        font-size: 1.1rem;
-    }
-    /* =========================================
-   MOBILE VIDEO FIX (Add to bottom of style.css)
-   ========================================= */
-@media (max-width: 768px) {
-
-    .video-background-manager {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100vh; /* Fallback */
-        height: 100dvh; /* Dynamic Height for modern phones */
-        z-index: -1;
-    }
-
     .bg-video {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        
-        /* THE FIX: Force it to cover everything */
+        width: 100vw !important;
+        height: 100dvh !important;
+        /* FORCE coverage even if it crops the sides */
         min-width: 100%; 
         min-height: 100%;
-        width: auto;
-        height: auto;
-        
-        /* Centering trick: Moves it to true center */
-        transform: translate(-50%, -50%);
-        
-        /* Ensure it covers even if aspect ratio is weird */
-        object-fit: cover;
+        object-fit: cover !important;
+        object-position: center center !important;
     }
-}
-
-    /* 1. FIX THE LOGO SIZE */
-    /* Prevents the logo from being wider than the phone screen */
-    .goku-logo-img {
-        height: auto !important; /* Let height adjust automatically */
-        width: 80% !important;   /* Max width is 80% of screen */
-        max-width: 300px;        /* Never wider than 300px */
-        margin: 10px auto;       /* Center it with space */
+    
+    /* 5. RESIZE GALLERY FOR PHONE */
+    .gallery-track img {
+        width: 160px !important;
+        height: 100px !important;
     }
-
-    /* 2. FIX THE ASCEND BUTTON POSITION */
-    /* Moves button to bottom-center for easy thumb access */
-    #intro div {
-        justify-content: center !important; 
-        align-items: flex-end !important;
-        padding-bottom: 80px !important; /* Space from bottom */
-        padding-right: 0 !important;
-    }
-
-    /* 3. PREVENT HORIZONTAL SCROLLING */
-    /* Stops the page from wobbling left/right */
-    body, html {
-        overflow-x: hidden;
-        width: 100%;
-    }
-  }
 }
