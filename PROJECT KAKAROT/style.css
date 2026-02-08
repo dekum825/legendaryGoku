@@ -388,47 +388,74 @@ html {
     /* =========================================
    MOBILE FIXES (Add to bottom of style.css)
    ========================================= */
+/* =========================================
+   MOBILE FIXES (Add/Replace at bottom of style.css)
+   ========================================= */
 @media (max-width: 768px) {
 
-    /* 1. FIX THE LOGO (Stop it from blocking text) */
+    /* 1. FIX THE OVERLAP (The most important part) */
+    /* We change 'sticky' to 'absolute'. 
+       This keeps the logo at the top of the Intro, 
+       but it WON'T scroll down and cover your text. */
     .sticky-goku-header {
-        position: absolute; /* Stops it from following you on mobile if you prefer */
-        /* OR keep 'sticky' but make it smaller: */
-        /* position: sticky; */ 
+        position: absolute !important; 
+        top: 0;
+        left: 0;
         width: 100%;
-        padding: 10px 0; /* Tighten padding */
-        text-align: center; /* Force center alignment */
-        background: transparent; /* Ensure no background blocks view */
+        padding: 15px 0;
+        z-index: 10; /* Keeps it above the video */
+        background: transparent;
     }
 
+    /* Force the logo to be small and centered */
     .goku-logo-img {
-        height: 60px !important; /* Force it SMALL */
+        height: 60px !important;
         width: auto !important;
+        display: block;
         margin: 0 auto;
     }
 
-    /* 2. FIX THE ASCEND BUTTON LOCATION */
-    /* We override the 'justify-content-end' from desktop */
-    #intro div {
-        flex-direction: column !important; /* Stack vertically */
-        justify-content: flex-end !important; /* Push everything to bottom */
-        align-items: center !important; /* Center horizontally */
-        padding-right: 0 !important; /* Remove desktop padding */
-        padding-left: 0 !important;
-        padding-bottom: 15vh !important; /* Lift it 15% from bottom of screen */
+    /* 2. FIX THE BIOGRAPHY LAYOUT (Where you circled) */
+    /* Give the text room to breathe now that the logo is gone */
+    #biography .container-fluid {
+        justify-content: flex-start !important; /* Align content to top */
+        padding-top: 40px !important; /* Add space at the very top */
+        padding-left: 20px !important;
+        padding-right: 20px !important;
     }
 
-    #activate-btn {
-        margin-top: 0 !important;
-        transform: scale(0.9); /* Slightly smaller button for phone */
+    /* Make the text box fill the screen properly */
+    .content-wrapper {
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        text-align: center !important; /* Center text looks better on mobile */
+    }
+
+    .glass-card {
+        padding: 20px 10px !important; /* Comfortable padding inside the box */
+        background: rgba(0, 0, 0, 0.6); /* Make text readable against background */
+        border-radius: 15px;
+    }
+
+    /* 3. FIX THE INTRO BUTTON */
+    /* Keeps the Ascend button accessible at the bottom */
+    #intro div {
+        flex-direction: column !important;
+        justify-content: flex-end !important;
+        align-items: center !important;
+        padding-bottom: 15vh !important; /* Lifted up for thumb access */
+        padding-right: 0 !important;
+        padding-left: 0 !important;
     }
     
-    /* 3. ENSURE TEXT IS VISIBLE */
-    .goku-title { 
-        /* In case you switch back to text instead of image */
-        font-size: 3rem !important;
-        text-align: center;
-        width: 100%;
+    /* 4. FIX THE RETURN BUTTON */
+    /* Make it big and easy to tap */
+    #back-btn {
+        width: 80%; /* Wide button */
+        margin-top: 20px;
+        padding: 12px;
+        font-size: 1.1rem;
     }
 }
     /* 1. FIX THE LOGO SIZE */
