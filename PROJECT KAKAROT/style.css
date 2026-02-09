@@ -735,3 +735,64 @@ body.view-bio .content-wrapper {
         border-color: #c0c0c0;
     }
 }
+/* =========================================
+   8. FIX FOR LANDSCAPE MOBILE & FULL SCREEN
+   ========================================= */
+
+/* This targets phones turned sideways (Landscape) */
+@media (max-width: 900px) and (orientation: landscape) {
+    
+    /* 1. UNLOCK THE HEIGHT (Fixes the Overlap) */
+    /* Instead of forcing everything into one screen, we let it scroll */
+    #intro, #biography, #transformations {
+        height: auto !important;       /* Allow section to grow */
+        min-height: 100vh;             /* At least full screen */
+        padding-top: 80px !important;  /* Make space for the header */
+        padding-bottom: 40px !important;
+        justify-content: flex-start !important; /* Stack items from top down */
+    }
+
+    /* 2. FIX THE HEADER IN LANDSCAPE */
+    .sticky-goku-header {
+        position: absolute !important; /* Unstick it so it doesn't block view */
+        padding: 5px 20px;
+    }
+    .goku-logo-img {
+        height: 50px !important; /* Smaller logo in landscape */
+    }
+
+    /* 3. FIX THE GALLERY & CARDS */
+    .content-wrapper {
+        margin-top: 20px; /* Push text down below header */
+        width: 80%;       /* Make text wider in landscape */
+    }
+    
+    .gallery-wrapper {
+        margin-top: 20px;
+    }
+
+    /* 4. FIX THE TRANSFORMATION GRID */
+    .transform-grid-wrapper {
+        max-height: none !important; /* Let the grid expand */
+        overflow-y: visible;         /* Remove scrollbar inside grid */
+    }
+}
+
+/* =========================================
+   9. FIX FOR ZOOMED VIDEO BACKGROUND
+   ========================================= */
+
+@media (max-width: 768px) {
+    .bg-video {
+        /* "cover" creates the zoom effect (which is necessary to avoid black bars).
+           We add "object-position" to ensure the FOCUS is on the center/top 
+           where Goku's face usually is, instead of zooming on his chest.
+        */
+        object-fit: cover; 
+        object-position: center 20%; /* Focus 20% from the top */
+        
+        /* OPTIONAL: If you absolutely MUST see the whole video 
+           (but this will create black bars/empty space), uncomment below: */
+        /* object-fit: contain; */ 
+    }
+}
