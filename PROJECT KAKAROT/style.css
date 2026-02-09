@@ -267,29 +267,104 @@ body.view-transform .goku-logo-img {
 .transform-card p { color: #ccc; font-size: 0.9rem; margin-top: 5px; }
 
 /* =========================================
-   7. MOBILE FIXES
+   7. MOBILE FIXES (Optimized)
    ========================================= */
 @media (max-width: 768px) {
-    /* Header Fix */
+
+    /* --- 1. VIDEO BACKGROUND FIX --- */
+    /* Prevents weird overlapping by ensuring it fits the "Dynamic" viewport */
+    .video-background-manager { 
+        height: 100dvh !important; 
+    }
+    .bg-video {
+        /* This centers the video better so Goku's face isn't cut off */
+        object-position: center top; 
+    }
+
+    /* --- 2. HEADER FIX --- */
     .sticky-goku-header {
-        position: absolute !important; top: 0; left: 0;
-        text-align: center; padding: 10px 0; background: transparent;
+        position: absolute !important; 
+        top: 0; left: 0;
+        width: 100%;
+        text-align: center; 
+        padding: 15px 0; 
+        background: transparent;
+        pointer-events: none; /* Lets you touch through the header */
     }
-    .goku-logo-img { height: 70px !important; margin: 0 auto; }
+    
+    .goku-logo-img { 
+        height: 60px !important; /* Smaller logo for mobile */
+        margin: 0 auto; 
+    }
 
-    /* Buttons Fix */
+    /* --- 3. BUTTONS FIX (Made Smaller) --- */
     .mobile-intro-layout {
-        flex-direction: column !important; justify-content: flex-end !important;
-        align-items: center !important; padding-right: 0 !important;
-        padding-bottom: 15vh !important;
+        flex-direction: column !important; 
+        justify-content: flex-end !important;
+        align-items: center !important; 
+        padding-right: 0 !important;
+        padding-bottom: 20vh !important; /* Lifts buttons up slightly */
     }
-    #activate-btn, #transform-btn { width: 80%; margin-bottom: 15px; }
 
-    /* Layout Fixes */
-    #biography .container-fluid {
-        justify-content: flex-start !important; padding-top: 100px !important;
+    #activate-btn, #transform-btn { 
+        width: 70%; /* Not too wide */
+        font-size: 1rem; /* Smaller text */
+        padding: 12px 20px; /* Less padding */
+        margin-bottom: 12px; 
+        letter-spacing: 1px;
     }
-    .video-background-manager { height: 100dvh !important; }
+
+    /* --- 4. BIOGRAPHY & GALLERY FIX (Prevent Cutting) --- */
+    #biography .container-fluid {
+        justify-content: flex-end !important; 
+        padding-bottom: 80px !important; /* Space for gallery */
+        padding-top: 0 !important;
+    }
+
+    .content-wrapper {
+        margin-bottom: 10px !important;
+        padding: 15px !important; /* Smaller padding in text box */
+    }
+    
+    .content-wrapper h2 { font-size: 2rem; } /* Smaller title */
+    .content-wrapper p { font-size: 0.9rem; line-height: 1.4; } /* Readable text */
+
+    /* FIX THE "SPLIT IN HALF" IMAGES */
+    .gallery-wrapper {
+        margin-top: 10px;
+        height: auto;
+    }
+    
+    .gallery-track img {
+        width: 140px; /* Reduced from 250px */
+        height: 90px; /* Reduced from 150px */
+        margin-right: 10px;
+        border-width: 1px;
+    }
+
+    /* --- 5. TRANSFORMATIONS GRID FIX --- */
+    .transform-grid-wrapper {
+        max-height: 55vh !important; /* Give it more room */
+        width: 95vw;
+        padding: 10px;
+    }
+
+    .transform-grid {
+        /* Switch to 2 columns on mobile so cards aren't tiny */
+        grid-template-columns: repeat(2, 1fr) !important; 
+        gap: 10px;
+    }
+    
+    .transform-card {
+        padding: 8px;
+    }
+    
+    .transform-card img {
+        width: 60px; /* Smaller icons */
+        height: 60px;
+    }
+    
+    .transform-card h3 { font-size: 0.9rem; }
 }
 
 /* =========================================
