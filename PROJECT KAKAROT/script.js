@@ -203,8 +203,46 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Listen for Escape key (to update button text if user presses Esc)
+/* =========================================
+       SMART RESIZE & FULLSCREEN HANDLER
+       ========================================= */
+    
+    // Function to re-align the page to the current section
+    function realignLayout() {
+        let activeSectionId = 'intro'; // Default to top
+
+        // 1. Check which section is currently active (using the classes our Observer adds)
+        if (document.body.classList.contains('view-bio')) {
+            activeSectionId = 'biography';
+        } else if (document.body.classList.contains('view-transform')) {
+            activeSectionId = 'transformations';
+        }
+
+        // 2. Force the browser to scroll exactly to that section
+        const section = document.getElementById(activeSectionId);
+        if (section) {
+            // Use 'auto' for instant snap (no animation) to prevent visual glitching during resize
+            section.scrollIntoView({ behavior: 'auto', block: 'start' });
+        }
+    }
+
+    // LISTENER 1: When Fullscreen Toggles (Enter or Exit)
     document.addEventListener('fullscreenchange', () => {
+        // Update Button Text
         if (!document.fullscreenElement) {
             fullscreenBtn.innerHTML = "&#x26F6; FULL SCREEN";
+        } else {
+            fullscreenBtn.innerHTML = "&#x2716; EXIT";
         }
+
+        // FIX: Re-align immediately so we don't land in the middle of nowhere
+        setTimeout(realignLayout, 100); 
+    });
+
+    // LISTENER 2: When Window Resizes (Manual drag or Maximize on Desktop)
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimer);
+        // Wait 100ms for resize to finish, then snap
+        resizeTimer = setTimeout(realignLayout, 100);
     });
