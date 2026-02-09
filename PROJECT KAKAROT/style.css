@@ -74,19 +74,19 @@ body {
     z-index: -1; overflow: hidden;
 }
 
+/* GLOBAL (Desktop Default) - Fills the screen */
 .bg-video {
     position: absolute; top: 50%; left: 50%;
     transform: translate(-50%, -50%);
+    
+    /* Force it to fill the screen on Desktop */
     min-width: 100%; min-height: 100%;
     width: auto; height: auto;
-    object-fit: cover;
+    
+    object-fit: cover; /* <--- KEEP THIS AS 'COVER' FOR DESKTOP */
+    
     transition: opacity 1s ease-in-out;
     opacity: 0; z-index: 0;
-}
-
-.global-overlay {
-    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0,0,0,0.3); z-index: 2;
 }
 
 /* === VIDEO VISIBILITY LOGIC === */
@@ -197,6 +197,22 @@ body.view-transform .goku-logo-img {
     body.view-bio .goku-logo-img,
     body.view-transform .goku-logo-img {
         height: 70px !important; 
+    }
+    
+    /* PASTE THIS INSIDE @media (max-width: 768px) { ... } */
+
+    /* FIX: Show WHOLE video on mobile (Cinematic Mode) */
+    .bg-video {
+        /* Reset the 'fill' rules from desktop */
+        min-width: auto !important;
+        min-height: auto !important;
+        
+        /* Force it to fit inside the screen boundaries */
+        width: 100% !important;
+        height: 100% !important;
+        
+        /* 'contain' ensures NO cropping happens */
+        object-fit: contain !important; 
     }
 }
 /* =========================================
@@ -366,7 +382,6 @@ body.view-transform .goku-logo-img {
     
     .transform-card h3 { font-size: 0.9rem; }
 }
-
 /* =========================================
    FIX: MOVE CONTENT TO BOTTOM (REVEAL FACES)
    ========================================= */
