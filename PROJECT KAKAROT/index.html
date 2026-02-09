@@ -6,9 +6,9 @@
     <title>Goku | Cinematic Legend</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css?v=2">
 </head>
-<body class="intro-mode">
+<body class="view-intro">
 
     <div id="rotate-device-overlay">
         <div class="rotate-content">
@@ -20,36 +20,49 @@
 
     <div class="video-background-manager">
         <video autoplay muted loop playsinline class="bg-video video-a">
-            <source src="son-goku-dragon-ball-moewalls-com.mp4" type="video/mp4">
+            <source src="video1.mp4" type="video/mp4">
         </video>
+        
         <video autoplay muted loop playsinline class="bg-video video-b">
-            <source src="son-goku-kakarot-dragon-ball-z-moewalls-com (online-video-cutter.com).mp4" type="video/mp4">
+            <source src="video2.mp4" type="video/mp4">
+        </video>
+
+        <video autoplay muted loop playsinline class="bg-video video-c">
+            <source src="video3.mp4" type="video/mp4"> 
         </video>
         <div class="global-overlay"></div>
     </div>
 
     <header class="sticky-goku-header">
-        <img src="Untitled-1.png" alt="Son Goku Logo" class="goku-logo-img">
+        <div class="d-flex justify-content-between align-items-center w-100">
+            <img src="Untitled-1.png" alt="Son Goku Logo" class="goku-logo-img">
+            
+            <button id="fullscreen-btn" class="btn btn-warning dragon-ball-font" style="border: 2px solid #000; box-shadow: 0 0 10px #FFD600;">
+                &#x26F6; FULL SCREEN
+            </button>
+        </div>
     </header>
 
     <main class="content-scroller">
         
-    <section id="intro" class="snap-section">
-        <div class="d-flex vh-100 align-items-center justify-content-end pe-5 mobile-intro-layout">
-           <button id="activate-btn" class="btn btn-lg">ASCEND</button>
-       </div>
-    </section>
+        <section id="intro" class="snap-section">
+            <div class="d-flex vh-100 align-items-center justify-content-end pe-5 mobile-intro-layout">
+                <div class="d-flex flex-column gap-3">
+                    <button id="activate-btn" class="btn btn-lg">ASCEND</button>
+                    <button id="transform-btn" class="btn btn-lg">TRANSFORMATIONS</button>
+                </div>
+            </div>
+        </section>
 
         <section id="biography" class="snap-section">
-            <div class="container-fluid h-100 d-flex flex-column justify-content-center ps-0 pe-0">
-                
+           <div class="container-fluid h-100 d-flex flex-column justify-content-end ps-0 pe-0 pb-5">
                 <div class="content-wrapper text-start ps-5 mb-4" style="z-index: 2;">
                     <div class="glass-card p-4 w-100"> 
                         <h2 class="dragon-ball-font text-warning display-5">The Legend</h2>
                         <p class="bio-text text-white" style="font-size: 1.2rem;">
-                            Goku's story is one of constant growth. From a low-class warrior to a being who rivals the gods...
+                            "The Saiyan who transcended the gods, fueled by the heart of a human." 
+                            <br>A relentless spirit who proves that limits are just another wall to break through.
                         </p>
-                        
                         <button id="back-btn" class="btn btn-outline-light mt-3">
                             &uarr; Return to Start
                         </button>
@@ -62,18 +75,86 @@
                             <img src="19055.webp"><img src="dragon-ball-episode-12-goku-looks-at-the-full-moon.webp">
                             <img src="fan-art-of-goku-ultra-instinct-f3p19brb0gnmvib9.webp"><img src="goku-not-a-hero.webp">
                             <img src="goku-dance.gif"><img src="whats-the-most-iconic-picture-of-goku-v0-o1mmhsnokm3e1.webp">
-                            
                             <img src="19055.webp"><img src="dragon-ball-episode-12-goku-looks-at-the-full-moon.webp">
                             <img src="fan-art-of-goku-ultra-instinct-f3p19brb0gnmvib9.webp"><img src="goku-not-a-hero.webp">
                             <img src="goku-dance.gif"><img src="whats-the-most-iconic-picture-of-goku-v0-o1mmhsnokm3e1.webp">
                         </div>
                     </div>
                 </div>
+            </div>
+        </section> 
+        <section id="transformations" class="snap-section">
+    <div class="container-fluid h-100 d-flex flex-column justify-content-end align-items-center pb-5">
+        
+        <h2 class="dragon-ball-font text-warning display-4 mb-3 text-center" style="text-shadow: 0 0 10px #000;">TRANSFORMATIONS</h2>
+
+        <div class="transform-grid-wrapper" id="grid-container">
+            <div class="transform-grid">
+                
+                <div class="transform-card" data-title="Kaioken" data-desc="A technique invented by King Kai. It multiplies the user's heartbeat and power levels, risking their body for a massive burst of strength.">
+                    <img src="1.webp" alt="Kaioken">
+                    <h3>Kaioken</h3>
+                </div>
+
+                <div class="transform-card" data-title="Super Saiyan" data-desc="The legendary warrior fueled by pure rage. This form awakened during the battle with Frieza, turning hair gold and eyes green.">
+                    <img src="2.webp" alt="SSJ">
+                    <h3>Super Saiyan</h3>
+                </div>
+
+                <div class="transform-card" data-title="Super Saiyan 2" data-desc="The ascended level beyond a Super Saiyan. Lightning surrounds the aura, and speed and power are drastically increased. First mastered by Gohan.">
+                    <img src="3.webp" alt="SSJ2">
+                    <h3>Super Saiyan 2</h3>
+                </div>
+
+                <div class="transform-card" data-title="Super Saiyan 3" data-desc="A form that extracts every drop of potential from Saiyan blood. It consumes immense energy and causes hair to grow down to the waist.">
+                    <img src="4.webp" alt="SSJ3">
+                    <h3>Super Saiyan 3</h3>
+                </div>
+
+                <div class="transform-card" data-title="Super Saiyan God" data-desc="A Divine state achieved through a ritual of five righteous Saiyans. It grants the user God Ki, making them faster and calmer than ever before.">
+                    <img src="5.webp" alt="God">
+                    <h3>Super Saiyan God</h3>
+                </div>
+
+                <div class="transform-card" data-title="Super Saiyan Blue" data-desc="Super Saiyan God Super Saiyan. This form combines the power of God Ki with the Super Saiyan transformation, creating a calm yet explosive blue aura.">
+                    <img src="6.webp" alt="Blue">
+                    <h3>Super Saiyan Blue</h3>
+                </div>
+
+                <div class="transform-card" data-title="UI Sign" data-desc="The initial state of Ultra Instinct. The body begins to move automatically without thinking, breaking the user's limits." style="border-color: #aaa;">
+                    <img src="7.webp" alt="UI Sign">
+                    <h3>UI Sign</h3>
+                </div>
+
+                <div class="transform-card" data-title="Mastered UI" data-desc="The complete state of the Angels. White hair represents total separation of mind and body, allowing for perfect evasion and counter-attacks." style="border-color: #fff;">
+                    <img src="8.webp" alt="MUI">
+                    <h3>Mastered UI</h3>
+                </div>
 
             </div>
-        </section>
-    </main>
+        </div>
 
+        <div id="full-view-overlay">
+            <div class="viewer-content">
+                <img id="viewer-img" src="" alt="Transformation">
+                <div class="viewer-text">
+                    <h2 id="viewer-title" class="dragon-ball-font text-warning">Title</h2>
+                    <p id="viewer-desc" class="text-white">Description goes here.</p>
+                    <button id="close-viewer-btn" class="btn btn-outline-warning mt-3">
+                        &larr; Back to Grid
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <button id="back-btn-2" class="btn btn-outline-light mt-4">
+            &uarr; Return to Start
+        </button>
+
+    </div>
+</section>
+
+    </main>
     <script src="script.js"></script>
 </body>
 </html>

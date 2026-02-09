@@ -1,462 +1,662 @@
-/* ADD THIS TO STYLE.CSS */
+/* =========================================
+   1. GLOBAL RESET
+   ========================================= */
+/* DELETE THE OLD "html, body" BLOCK AND REPLACE WITH THIS */
 
-/* 1. Global Smooth Scroll Enforcement */
-html {
+body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    
+    /* Use min-height so it starts at full screen but can GROW */
+    min-height: 100vh; 
+    
+    overflow-y: hidden;
+    overflow-x: hidden; 
+    background-color: #000;
     scroll-behavior: smooth;
-    overflow-x: hidden; /* Prevents horizontal scrolling on mobile */
+    
+    /* Ensure no zoom lock */
+    touch-action: auto; 
+}
+/* =========================================
+   CUSTOM SCROLLBAR (Cinematic Look)
+   ========================================= */
+/* Width of the scrollbar */
+::-webkit-scrollbar {
+    width: 10px;
 }
 
-/* 2. Transition Logic */
-/* When we add 'launch-mode' via JS, the intro fades out */
-.launch-mode #intro {
-    opacity: 0;
-    transform: translateY(-100px); /* Moves up while fading */
-    transition: all 1s ease-in-out;
+/* Track (Background) */
+::-webkit-scrollbar-track {
+    background: #111; 
 }
 
-/* ASCEND "POWER UP" BUTTON */
-#activate-btn {
-    font-family: 'Bangers', cursive;
-    font-size: 2rem;
-    letter-spacing: 2px;
-    color: #000; /* Black text on bright background for contrast */
-    background: linear-gradient(to bottom, #FFD600, #FF8C00); /* Yellow-to-Orange gradient */
-    border: 3px solid #e74c3c; /* Red border */
-    border-radius: 50px; /* Rounded "capsule" shape */
-    padding: 15px 50px;
-    
-    /* A pulsing energy glow */
-    box-shadow: 0 0 20px rgba(255, 215, 0, 0.6), inset 0 0 10px rgba(255, 255, 255, 0.5);
-    
-    transition: all 0.2s ease-in-out;
-}
-/* ANIMATION: The "Sliding Launch" Effect */
-.launching-btn {
-    /* 1. MOVE: Slide 300px to the right (off the screen edge) */
-    transform: translateX(300px) scale(0.8) !important;
-    
-    /* 2. FADE: Disappear while moving */
-    opacity: 0 !important;
-    
-    /* 3. SPEED: Accelerate out (ease-in) */
-    transition: all 0.6s ease-in !important;
-    
-    /* Optional: Prevent clicking it again while it's moving */
-    pointer-events: none;
+/* Handle (The moving part) */
+::-webkit-scrollbar-thumb {
+    background: #FFD600; 
+    border-radius: 5px;
+    border: 2px solid #000; /* Adds a nice border */
 }
 
-/* Hover Effect: Brightens and glows more */
-#activate-btn:hover {
-    transform: scale(1.05); /* Slight grow */
-    background: linear-gradient(to bottom, #ffff00, #ffaa00);
-    box-shadow: 0 0 40px rgba(255, 215, 0, 1), 0 0 10px #fff;
-    cursor: pointer;
+/* Handle on Hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #FF8C00; 
 }
-/* 1. LAYERING THE VIDEOS */
+
+/* =========================================
+   2. ROTATE DEVICE OVERLAY (FIXED)
+   ========================================= */
+#rotate-device-overlay {
+    display: none; /* Hidden by default on Desktop */
+}
+
+/* ONLY SHOW ON MOBILE PORTRAIT */
+@media (max-width: 768px) and (orientation: portrait) {
+    #rotate-device-overlay {
+        display: flex;
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: #000; z-index: 9999;
+        color: #FFD600;
+        flex-direction: column; justify-content: center; align-items: center;
+        text-align: center;
+    }
+    #rotate-device-overlay h2 { font-family: 'Bangers', cursive; font-size: 3rem; margin: 0; }
+    #rotate-device-overlay p { font-family: sans-serif; color: #fff; margin-top: 10px; }
+    #rotate-device-overlay .phone-icon { font-size: 4rem; margin-bottom: 20px; }
+}
+
+/* =========================================
+   3. VIDEO BACKGROUND MANAGER
+   ========================================= */
 .video-background-manager {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    z-index: -1; /* Keeps videos behind everything */
+    position: fixed; top: 0; left: 0; width: 100%; height: 100dvh;
+    z-index: -1; overflow: hidden;
 }
 
 .bg-video {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    min-width: 100%; min-height: 100%;
+    width: auto; height: auto;
     object-fit: cover;
-    transition: opacity 1.5s ease-in-out; /* The cross-fade effect */
+    transition: opacity 1s ease-in-out;
+    opacity: 0; z-index: 0;
 }
 
-/* Initially, Video A is visible and Video B is hidden */
-.video-a { opacity: 1; z-index: 1; }
-.video-b { opacity: 0; z-index: 0; }
-
-/* When we scroll, we swap them */
-.scrolled-mode .video-a { opacity: 0; }
-.scrolled-mode .video-b { opacity: 1; }
-
-
-/* 2. THE STICKY HEADER (Updated Location) */
-.sticky-goku-header {
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-    padding: 20px 50px; /* 20px top, 50px left/right */
-    text-align: left;   /* Moves title to the Left side */
-    width: 100%;
-}
-/* DRAGON BALL Z STYLE TITLE */
-/* LOGO IMAGE STYLING (Transparency Fix) */
-.goku-logo-img {
-    height: 150px; /* Start BIG */
-    width: auto;
-    
-    /* ANIMATION: Smoothly shrinks */
-    transition: all 0.5s ease;
-    
-    /* THE MAGIC TRICK: Makes white background transparent */
-    mix-blend-mode: multiply; 
-    
-    /* OPTIONAL: Boost brightness so it pops against the video */
-    filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.8)) brightness(1.2);
-    
-    /* Ensure it sits nicely */
-    display: block;
+.global-overlay {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.3); z-index: 2;
 }
 
-/* SCROLLED STATE (Shrink) */
-.scrolled-mode .goku-logo-img {
-    height: 70px; /* Shrinks down */
-    mix-blend-mode: normal; /* Sometimes looks better normal when small */
-    /* If normal looks like a white box again, keep it as 'multiply' */
-}
-/* 3. THE AUTO-CROSSFADE GALLERY */
-.auto-crossfade-gallery {
-    position: relative;
-    height: 400px;
-    width: 100%;
-    margin-top: 2rem;
-}
+/* === VIDEO VISIBILITY LOGIC === */
+/* Intro State (Video 1) */
+body.view-intro .video-a { opacity: 1 !important; z-index: 1; }
+body.view-intro .video-b { opacity: 0 !important; z-index: 0; }
+body.view-intro .video-c { opacity: 0 !important; z-index: 0; }
 
-.fade-img {
-    position: absolute;
-    top: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    height: 100%;
-    width: auto;
-    opacity: 0;
-    border-radius: 15px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-    animation: crossfade 12s infinite; /* 12s total loop */
-}
+/* Bio State (Video 2) */
+body.view-bio .video-a { opacity: 0 !important; z-index: 0; }
+body.view-bio .video-b { opacity: 1 !important; z-index: 1; }
+body.view-bio .video-c { opacity: 0 !important; z-index: 0; }
 
-/* Staggering the images in the loop */
-.fade-img:nth-child(1) { animation-delay: 0s; }
-.fade-img:nth-child(2) { animation-delay: 3s; }
-.fade-img:nth-child(3) { animation-delay: 6s; }
-.fade-img:nth-child(4) { animation-delay: 9s; }
+/* Transform State (Video 3) */
+body.view-transform .video-a { opacity: 0 !important; z-index: 0; }
+body.view-transform .video-b { opacity: 0 !important; z-index: 0; }
+body.view-transform .video-c { opacity: 1 !important; z-index: 1; }
 
-@keyframes crossfade {
-    0% { opacity: 0; }
-    15% { opacity: 1; }
-    35% { opacity: 1; }
-    50% { opacity: 0; }
-    100% { opacity: 0; }
-}
-
-/* 1. CONTAINER SETUP */
-.gallery-row {
-    overflow: hidden; /* Hides the scrollbar */
-    width: 100vw;     /* Full screen width */
-    margin-bottom: 20px;
-    position: relative;
-    display: flex;
-}
-
-.gallery-track {
-    display: flex;
-    /* max-content ensures the track is as wide as ALL images combined */
-    width: max-content; 
-    /* This connects the duplicates directly to the originals */
-}
-
-/* 2. IMAGE STYLING (Your custom size) */
-.gallery-track img {
-    width: 220px !important;
-    height: 130px !important;
-    object-fit: cover;
-    margin-right: 25px; /* Creates the gap between images */
-    border-radius: 10px;
-    border: 2px solid #fff;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.6), 0 0 20px rgba(241,196,15,0.7);
-}
-
-/* 3. INFINITE SCROLL ANIMATION */
-.track-left {
-    animation: scrollLoopLeft 20s linear infinite;
-}
-
-@keyframes scrollLoopLeft {
-    0% { transform: translateX(0); }
-    100% { transform: translateX(-50%); } 
-    /* We stop at 50% because that is exactly where the duplicate set starts.
-       It snaps back to 0 instantly, creating the illusion of a loop. */
-}
-.acknowledgement-card {
-    background: rgba(0, 0, 0, 0.85); /* Darker for readability */
-    border: 3px solid #F1C40F; /* Saiyan Gold */
-    border-radius: 20px;
-    box-shadow: 0 0 40px rgba(241, 196, 15, 0.3); /* Aura Glow */
-    backdrop-filter: blur(15px);
-}
-
-.creator-name {
-    font-size: 1.5rem;
-    color: white;
-}
-
-.creator-name span {
-    color: #F85C1B; /* Dragon Ball Orange */
-    font-weight: bold;
-    text-shadow: 0 0 10px rgba(248, 92, 27, 0.6);
-}
-
-.tech-list li {
-    color: #ddd;
-    margin-bottom: 10px;
-    font-family: 'Roboto', sans-serif;
-}
-
-.disclaimer {
-    font-size: 0.8rem;
-    color: #777;
-    font-style: italic;
-}
-/* Custom Dragon Ball Theme for Cards */
-.anime-card {
-    background: rgba(0, 0, 0, 0.7) !important; /* Darker for high contrast */
-    border: 2px solid #F1C40F !important; /* Saiyan Gold Border */
-    border-radius: 15px;
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    cursor: pointer;
-    overflow: hidden;
-    position: relative;
-}
-
-/* The Saiyan Aura Glow */
-.anime-card:hover {
-    transform: scale(1.05) translateY(-10px);
-    border-color: #F85C1B !important; /* Changes to Orange on hover */
-    box-shadow: 0 0 20px #F1C40F, 0 0 40px rgba(248, 92, 27, 0.4);
-}
-
-.card-title {
-    font-family: 'Bangers', cursive; /* Aggressive Anime Font */
-    letter-spacing: 2px;
-    font-size: 1.8rem;
-    color: #F1C40F;
-    text-shadow: 2px 2px 0px #000;
-}
-
-/* Adding a "Power" stripe behind the title */
-.card-body {
-    background: linear-gradient(45deg, transparent, rgba(241, 196, 15, 0.1), transparent);
-}
-/* 1. Force Gallery to Full Width */
-.gallery-wrapper {
-    width: 100vw; /* Explicitly full viewport width */
-    overflow: hidden; /* Prevents scrollbars from appearing */
-    position: relative;
-    left: 0;
-}
-
-/* 2. The Image Styling with "Shadow Shadow" Effect */
-.gallery-track img {
-    width: 300px;  /* Make them wide enough to see clearly */
-    height: 180px;
-    object-fit: cover;
-    margin-right: 20px;
-    border-radius: 10px;
-    border: 2px solid #F1C40F; /* Gold Border */
-    
-    /* THE SHADOW EFFECT */
-    /* Layer 1: Black shadow for depth (drops down) */
-    /* Layer 2: Gold glow for energy (surrounds image) */
-    box-shadow: 
-        0 10px 20px rgba(0, 0, 0, 0.8), 
-        0 0 25px rgba(241, 196, 15, 0.6); 
-
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-/* Optional: Make it pop even more on hover */
-.gallery-track img:hover {
-    transform: scale(1.1);
-    box-shadow: 
-        0 15px 30px rgba(0, 0, 0, 1), 
-        0 0 40px rgba(241, 196, 15, 1);
-}
-/* RETURN "NIMBUS" BUTTON */
-#back-btn {
-    font-family: 'Bangers', cursive;
-    font-size: 1.4rem;
-    letter-spacing: 1px;
-    color: #FFD600; /* Yellow text */
-    background: rgba(231, 76, 60, 0.2); /* Semi-transparent red/orange */
-    border: 2px solid #FFD600; /* Yellow border */
-    border-radius: 30px;
-    padding: 10px 30px;
-    margin-top: 20px;
-    
-    /* A subtler, steady glow */
-    box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
-    
-    transition: all 0.3s ease;
-}
-
-/* Hover Effect: Fills with energy */
-#back-btn:hover {
-    background: #FFD600; /* Fills with yellow */
-    color: #c0392b; /* Text turns dark red */
-    box-shadow: 0 0 30px rgba(255, 215, 0, 0.8);
-    transform: translateY(-3px); /* Floats up slightly */
-}
-/* HIDDEN STATE */
-.btn-hidden {
-    opacity: 0 !important;
-    pointer-events: none; /* Prevents clicking while hidden */
-    transform: translateY(20px); /* Moves it down slightly */
-    transition: all 0.5s ease;
-}
 /* =========================================
-   PHASE 5: ROTATE DEVICE OVERLAY
+   SMOOTH SHRINKING HEADER ANIMATION
    ========================================= */
 
-/* Default: Hidden on desktops and landscape phones */
-#rotate-device-overlay {
-    display: none; 
-    position: fixed;
+.sticky-goku-header {
+    position: fixed; 
     top: 0;
     left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: #000; /* Black background */
-    z-index: 9999; /* Sits on top of EVERYTHING */
-    color: #F1C40F; /* Saiyan Gold text */
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
+    width: 100%;
+    z-index: 1000;
+    
+    /* DEFAULT STATE (Big) */
+    padding: 20px 40px; 
+    background: transparent; /* Initially clear */
+    
+    /* ANIMATION: Smoothly change background & padding */
+    transition: all 0.4s ease-in-out;
+    
+    pointer-events: none; 
 }
 
-/* The Animation Icon */
-.phone-icon {
-    font-size: 4rem;
-    margin-bottom: 20px;
-    animation: rotate-animation 2s infinite ease-in-out;
+/* Ensure content inside header is clickable */
+.sticky-goku-header * {
+    pointer-events: auto;
 }
 
-@keyframes rotate-animation {
-    0% { transform: rotate(0deg); }
-    50% { transform: rotate(90deg); } /* Simulate turning phone */
-    100% { transform: rotate(0deg); }
+/* THE LOGO IMAGE */
+.goku-logo-img {
+    /* DEFAULT STATE (Big) */
+    height: 150px; 
+    width: auto;
+    display: block;
+    mix-blend-mode: multiply;
+    filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.8));
+    
+    /* ANIMATION: Smoothly shrink height */
+    transition: height 0.4s cubic-bezier(0.25, 0.1, 0.25, 1); /* Custom smooth curve */
 }
 
-/* ANIMATION 1: The "Sliding Launch" Button */
-.launching-btn {
-    /* Moves the button to the RIGHT (300px) and fades it out */
-    transform: translateX(300px) scale(0.8) !important; 
-    opacity: 0 !important;
-    transition: all 0.6s ease-in !important; /* fast acceleration */
-    pointer-events: none; /* Prevents double-clicking */
-}
-/* ANIMATION 2: The "Rising Train" Gallery */
-.gallery-wrapper {
-    /* DEFAULT STATE: Hidden down below */
-    transform: translateY(300px); /* Pushed down 300px */
-    opacity: 0; /* Invisible */
-    transition: all 1s ease-out; /* Smooth 1-second rise */
+
+/* === THE SHRINK TRIGGER === */
+/* When scrolling down to Bio or Transformations... */
+body.view-bio .sticky-goku-header,
+body.view-transform .sticky-goku-header {
+    padding: 10px 40px; /* Shrink padding */
+    background: linear-gradient(to bottom, rgba(0,0,0,0.9), transparent); /* Add dark fade */
 }
 
-/* ACTIVE STATE: Rises to normal position */
-.gallery-active {
-    transform: translateY(0) !important; /* Moves up to natural spot */
-    opacity: 1 !important; /* Becomes visible */
+body.view-bio .goku-logo-img,
+body.view-transform .goku-logo-img {
+    height: 80px; /* SHRINK LOGO */
 }
 
-/* THE TRIGGER: Only show this on Portrait Mobile Screens */
-@media screen and (orientation: portrait) and (max-width: 900px) {
-    #rotate-device-overlay {
-        display: flex; /* Turn it on! */
+
+/* === FULLSCREEN BUTTON (Keep existing style) === */
+#fullscreen-btn {
+    font-size: 1.2rem;
+    padding: 5px 15px;
+    border-radius: 20px;
+    background: #FFD600;
+    color: #000;
+    transition: transform 0.2s;
+    cursor: pointer;
+    border: 2px solid #000;
+    box-shadow: 0 0 10px #FFD600;
+}
+
+#fullscreen-btn:hover {
+    transform: scale(1.1);
+    background: #fff;
+}
+
+
+/* === MOBILE OVERRIDES === */
+@media (max-width: 768px) {
+    #fullscreen-btn { display: none; }
+    
+    .sticky-goku-header {
+        position: absolute !important; /* Keep your mobile fix */
+        padding: 10px 0;
+        justify-content: center;
     }
     
-    /* Hide the main scrollbar so they can't scroll away */
-    body {
-        overflow: hidden;
+    .goku-logo-img {
+        height: 70px !important; /* Always small on mobile */
+        margin: 0 auto;
+    }
+    
+    /* Disable shrinking logic on phones (it's already small) */
+    body.view-bio .goku-logo-img,
+    body.view-transform .goku-logo-img {
+        height: 70px !important; 
     }
 }
+/* =========================================
+   5. BUTTONS
+   ========================================= */
+#intro { height: 100vh; position: relative; }
+.mobile-intro-layout { height: 100%; display: flex; }
+
+#activate-btn, #transform-btn {
+    font-family: 'Bangers', cursive; font-size: 1.5rem; letter-spacing: 2px;
+    border-radius: 50px; padding: 15px 40px; border: 3px solid #fff;
+    cursor: pointer; transition: transform 0.2s;
+}
+
+#activate-btn {
+    background: linear-gradient(to bottom, #FFD600, #FF8C00); color: #000;
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
+}
+#transform-btn {
+    background: linear-gradient(to bottom, #00C6FF, #0072FF); color: #fff;
+    box-shadow: 0 0 20px rgba(0, 198, 255, 0.6);
+}
+
+#activate-btn:hover, #transform-btn:hover { transform: scale(1.05); }
 
 /* =========================================
-   FINAL MOBILE FIX (Replace the bottom of style.css with this)
+   6. BIOGRAPHY & TRANSFORMATIONS
+   ========================================= */
+#biography { 
+    height: 100vh;
+    position: relative; 
+}
+.glass-card {
+    background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(10px);
+    border-radius: 15px; border-left: 5px solid #FFD600;
+}
+.dragon-ball-font { font-family: 'Bangers', cursive; }
+#back-btn, #back-btn-2 {
+    font-family: 'Bangers'; color: #FFD600; border: 2px solid #FFD600;
+    background: rgba(0,0,0,0.5); padding: 10px 20px; border-radius: 20px;
+}
+
+.gallery-wrapper { width: 100vw; overflow: hidden; margin-top: 2rem; }
+.gallery-track { display: flex; width: max-content; animation: scrollLoopLeft 20s linear infinite; }
+.gallery-track img {
+    width: 250px; height: 150px; object-fit: cover; margin-right: 20px;
+    border: 2px solid #F1C40F; border-radius: 10px;
+}
+@keyframes scrollLoopLeft { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+/* Transformations Grid */
+#transformations {
+    height: 100vh; 
+    position: relative; 
+}
+.transform-grid-wrapper {
+    width: 90vw; max-height: 70vh; overflow-y: auto;
+    padding: 20px; background: rgba(0,0,0,0.5); border-radius: 20px;
+}
+.transform-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;
+}
+.transform-card {
+    background: rgba(0,0,0,0.8); border: 1px solid #00C6FF;
+    border-radius: 10px; padding: 15px; text-align: center;
+}
+.transform-card h3 { color: #F1C40F; font-family: 'Bangers'; margin: 0; }
+.transform-card p { color: #ccc; font-size: 0.9rem; margin-top: 5px; }
+
+/* =========================================
+   7. MOBILE FIXES
    ========================================= */
 @media (max-width: 768px) {
-
-    /* 1. FIX THE HEADER OVERLAP (The most important fix) */
-    /* switching to 'absolute' means it stays at the top and 
-       SCROLLS AWAY so it doesn't block your reading */
+    /* Header Fix */
     .sticky-goku-header {
-        position: absolute !important; 
-        top: 0;
-        left: 0;
-        width: 100%;
-        padding: 10px 0; /* Less padding */
-        background: transparent;
-        z-index: 50; 
+        position: absolute !important; top: 0; left: 0;
+        text-align: center; padding: 10px 0; background: transparent;
     }
+    .goku-logo-img { height: 70px !important; margin: 0 auto; }
 
-    /* Force the Logo Small & Centered */
-    .goku-logo-img {
-        height: 60px !important;
-        width: auto !important;
-        display: block;
-        margin: 10px auto; 
-    }
-
-    /* 2. FIX THE ASCEND BUTTON (Mobile Position) */
-    /* Targeting the new class .mobile-intro-layout we added in HTML */
+    /* Buttons Fix */
     .mobile-intro-layout {
-        flex-direction: column !important;
-        justify-content: flex-end !important; /* Push to bottom */
-        align-items: center !important; /* Center Horizontally */
-        padding-right: 0 !important;
-        padding-bottom: 20vh !important; /* Lift it up for your thumb */
+        flex-direction: column !important; justify-content: flex-end !important;
+        align-items: center !important; padding-right: 0 !important;
+        padding-bottom: 15vh !important;
     }
-    
-    #activate-btn {
-        transform: scale(0.9); /* Slightly smaller */
-    }
+    #activate-btn, #transform-btn { width: 80%; margin-bottom: 15px; }
 
-    /* 3. FIX THE BIOGRAPHY TEXT (Clear space) */
+    /* Layout Fixes */
     #biography .container-fluid {
-        justify-content: flex-start !important; /* Start content at top */
-        padding-top: 80px !important; /* Push down so it doesn't touch top edge */
+        justify-content: flex-start !important; padding-top: 100px !important;
     }
+    .video-background-manager { height: 100dvh !important; }
+}
 
-    .content-wrapper {
-        width: 90% !important; /* Use almost full width */
-        margin: 0 auto 20px auto !important; /* Center it */
-        padding: 0 !important;
-    }
+/* =========================================
+   FIX: MOVE CONTENT TO BOTTOM (REVEAL FACES)
+   ========================================= */
 
-    .glass-card {
-        padding: 15px !important;
-        text-align: center; /* Center text is easier to read on phone */
-    }
+/* 1. BIOGRAPHY SECTION (The Legend) */
+#biography .container-fluid {
+    justify-content: flex-end !important; /* Pushes content to bottom */
+    padding-bottom: 50px !important; /* Adds space at the bottom */
+}
 
-    /* 4. FIX THE VIDEO JUMP (The 'White Bar' Fix) */
-    .video-background-manager {
-        height: 100dvh !important; /* Dynamic height fixes address bar glitches */
-    }
+/* Adjust the text card to sit nicely above the gallery */
+#biography .content-wrapper {
+    margin-bottom: 20px !important; 
+    max-width: 800px; /* Optional: Prevents text from getting too wide */
+}
+
+
+/* 2. TRANSFORMATIONS SECTION (The Grid) */
+#transformations .container-fluid {
+    justify-content: flex-end !important; /* Pushes grid to bottom */
+    padding-bottom: 50px !important;
+}
+
+/* 3. CONTROL THE GRID HEIGHT */
+/* This ensures the grid only takes up the bottom half of the screen */
+.transform-grid-wrapper {
+    max-height: 50vh !important; /* Max 50% of screen height */
+    margin-bottom: 20px;
+}
+
+/* 4. HEADER ADJUSTMENT */
+/* Ensure the "Saiyan Evolution" title sits right above the grid */
+#transformations h2 {
+    margin-bottom: 15px !important;
+    text-shadow: 0 4px 10px rgba(0,0,0,1); /* Make text readable against video */
+}
+/* =========================================
+   FINAL POLISH: ANIMATIONS & GRID
+   ========================================= */
+
+/* 1. FORCE 2x4 GRID LAYOUT */
+.transform-grid {
+    display: grid;
+    /* Force exactly 4 columns. The rows will auto-create (so 8 items = 2 rows) */
+    grid-template-columns: repeat(4, 1fr); 
+    gap: 15px;
+    width: 100%;
+}
+
+/* 2. CARD DESIGN (Picture + Text) */
+/* UPDATE THIS BLOCK */
+.transform-card {
+    background: rgba(0, 0, 0, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
     
-    .bg-video {
-        width: 100vw !important;
-        height: 100dvh !important;
-        /* FORCE coverage even if it crops the sides */
-        min-width: 100%; 
-        min-height: 100%;
-        object-fit: cover !important;
-        object-position: center center !important;
-    }
+    padding: 10px; /* <-- REDUCED from 15px/20px to 10px */
     
-    /* 5. RESIZE GALLERY FOR PHONE */
-    .gallery-track img {
-        width: 160px !important;
-        height: 100px !important;
+    text-align: center;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    opacity: 0; 
+    transform: translateY(50px);
+}
+
+.transform-card img {
+    width: 80px;   /* Fixed width */
+    height: 80px;  /* Fixed height (Same as width = Perfect Square) */
+    object-fit: cover; /* Crops the sides so it doesn't stretch */
+    border-radius: 8px;
+    margin: 0 auto 8px auto; /* Centers the image horizontally */
+    display: block; /* Required for centering */
+    border: 2px solid #444; /* Slightly thicker border for style */
+}
+.transform-card h3 {
+    font-size: 1.1rem;
+    margin-bottom: 2px;
+    color: #FFD600;
+}
+
+.transform-card p {
+    font-size: 0.75rem;
+    color: #ccc;
+    line-height: 1.2;
+}
+
+/* 3. HOVER ANIMATIONS (Glow & Lift) */
+.transform-card:hover {
+    transform: translateY(-10px) scale(1.05); /* Lifts up */
+    background: rgba(0, 0, 0, 0.9);
+    border-color: #00C6FF;
+    box-shadow: 0 0 20px rgba(0, 198, 255, 0.6); /* Blue Glow */
+    z-index: 10;
+}
+
+.transform-card:hover img {
+    border-color: #00C6FF;
+}
+
+/* 4. ENTRANCE ANIMATIONS (Staggered Pop-up) */
+/* Only animate when the user is LOOKING at the section (body has view-transform) */
+body.view-transform .transform-card {
+    animation: cardEntrance 0.6s ease-out forwards;
+}
+
+@keyframes cardEntrance {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Add delays so they pop up one by one */
+body.view-transform .transform-card:nth-child(1) { animation-delay: 0.1s; }
+body.view-transform .transform-card:nth-child(2) { animation-delay: 0.2s; }
+body.view-transform .transform-card:nth-child(3) { animation-delay: 0.3s; }
+body.view-transform .transform-card:nth-child(4) { animation-delay: 0.4s; }
+body.view-transform .transform-card:nth-child(5) { animation-delay: 0.5s; }
+body.view-transform .transform-card:nth-child(6) { animation-delay: 0.6s; }
+body.view-transform .transform-card:nth-child(7) { animation-delay: 0.7s; }
+body.view-transform .transform-card:nth-child(8) { animation-delay: 0.8s; }
+
+
+/* 5. DESCRIPTION SLIDE ANIMATION (For the Bio Section) */
+.content-wrapper {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 1s ease-out;
+}
+
+/* Trigger animation when viewing Bio */
+body.view-bio .content-wrapper {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+
+/* 6. BUTTON TRANSITIONS */
+#activate-btn, #transform-btn, #back-btn, #back-btn-2 {
+    transition: all 0.3s ease !important;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Shine effect on hover */
+#activate-btn:hover, #transform-btn:hover {
+    transform: scale(1.1);
+    letter-spacing: 4px; /* Expands text */
+    filter: brightness(1.2);
+}
+
+
+/* 7. MOBILE ADJUSTMENT FOR GRID (Keep it readable) */
+@media (max-width: 768px) {
+    .transform-grid {
+        /* On phone, 4 columns is too small. Switch to 2x4 (Vertical scroll) or horizontal scroll */
+        grid-template-columns: repeat(2, 1fr) !important; 
+    }
+    /* FIND THIS INSIDE THE MOBILE MEDIA QUERY */
+.transform-card img {
+    height: 80px !important; /* <--- INCREASED from 50px to 80px */
+}
+}
+/* =========================================
+   INTERACTIVE VIEWER SYSTEM (Cinematic Upgrade)
+   ========================================= */
+
+/* 1. BUTTON CARDS */
+.transform-card {
+    cursor: pointer;
+    transition: all 0.2s ease;
+    padding-bottom: 10px;
+}
+.transform-card p { display: none; }
+.transform-card:active { transform: scale(0.95); border-color: #FFD600; }
+
+/* 2. THE OVERLAY (Backdrop) */
+#full-view-overlay {
+    display: none; 
+    position: fixed; /* Fixed ensures it covers screen even if you scroll */
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.85); /* Slightly transparent */
+    backdrop-filter: blur(15px); /* BLURS the background! High-tech feel */
+    z-index: 2000; /* Stays on top of everything */
+    align-items: center; justify-content: center;
+    
+    /* Fade in the black background */
+    animation: fadeInBG 0.4s forwards;
+}
+
+@keyframes fadeInBG { from { opacity: 0; } to { opacity: 1; } }
+
+/* 3. VIEWER CONTENT CONTAINER */
+.viewer-content {
+    display: flex;
+    flex-direction: row;
+    max-width: 1000px; width: 90%;
+    align-items: center; gap: 40px;
+    perspective: 1000px; /* Adds 3D depth */
+}
+
+/* 4. ANIMATION CLASSES (We toggle these in JS) */
+
+/* Image flies in from LEFT */
+.slide-in-left {
+    opacity: 0;
+    animation: slideLeft 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+    animation-delay: 0.1s; /* Slight delay */
+}
+
+/* Text flies in from RIGHT */
+.slide-in-right {
+    opacity: 0;
+    animation: slideRight 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+    animation-delay: 0.2s; /* Slight delay after image */
+}
+
+/* 5. KEYFRAMES */
+@keyframes slideLeft {
+    0% { opacity: 0; transform: translateX(-100px) scale(0.9); }
+    100% { opacity: 1; transform: translateX(0) scale(1); }
+}
+
+@keyframes slideRight {
+    0% { opacity: 0; transform: translateX(100px); }
+    100% { opacity: 1; transform: translateX(0); }
+}
+
+/* 6. CONTENT STYLING */
+#viewer-img {
+    width: 50%; max-height: 70vh;
+    object-fit: contain;
+    border: 3px solid #FFD600;
+    border-radius: 15px;
+    box-shadow: 0 0 50px rgba(255, 214, 0, 0.4); /* Big Glow */
+}
+
+.viewer-text { width: 50%; text-align: left; }
+
+#viewer-title {
+    font-size: 3.5rem; margin-bottom: 20px;
+    text-transform: uppercase;
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+}
+
+#viewer-desc {
+    font-size: 1.3rem; line-height: 1.6; color: #ddd;
+    border-left: 4px solid #00C6FF; /* Tech accent line */
+    padding-left: 20px;
+}
+
+/* 7. MOBILE ADJUSTMENTS */
+@media (max-width: 768px) {
+    .viewer-content { flex-direction: column; margin-top: 20px; gap: 20px; }
+    #viewer-img { width: 90%; max-height: 40vh; }
+    .viewer-text { width: 100%; text-align: center; }
+    #viewer-desc { border-left: none; padding-left: 0; font-size: 1rem; }
+    #viewer-title { font-size: 2.2rem; }
+}
+/* =========================================
+   PROGRESSIVE POWER LEVELS (Level 1 to 8)
+   ========================================= */
+
+/* KAIOKEN (Level 1) - Slow Red Pulse */
+.transform-card:nth-child(1) {
+    animation: pulseRed 3s infinite ease-in-out;
+    border-color: rgba(255, 0, 0, 0.3);
+}
+
+/* SUPER SAIYAN (Level 2) - Steady Gold Glow */
+.transform-card:nth-child(2) {
+    animation: pulseGold 2.5s infinite ease-in-out;
+    border-color: rgba(255, 215, 0, 0.3);
+}
+
+/* SUPER SAIYAN 2 (Level 3) - Sharp Gold + Electricity */
+.transform-card:nth-child(3) {
+    animation: electricGold 0.8s infinite alternate; /* Fast flickering */
+}
+
+/* SUPER SAIYAN 3 (Level 4) - Deep Gold Power */
+.transform-card:nth-child(4) {
+    animation: deepPowerGold 2s infinite ease-in-out;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.2);
+}
+
+/* SUPER SAIYAN GOD (Level 5) - Fiery Red Aura */
+.transform-card:nth-child(5) {
+    animation: pulseGod 2s infinite ease-in-out;
+}
+
+/* SUPER SAIYAN BLUE (Level 6) - Calm Cyan Power */
+.transform-card:nth-child(6) {
+    animation: pulseBlue 2s infinite ease-in-out;
+}
+
+/* UI SIGN (Level 7) - Unstable Silver/Blue Heat */
+.transform-card:nth-child(7) {
+    animation: instinctSign 0.1s infinite alternate; /* Very fast vibration */
+}
+
+/* MASTERED UI (Level 8) - Godly Silver/White Limit Breaker */
+.transform-card:nth-child(8) {
+    animation: masteredUI 1.5s infinite ease-in-out;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.5); /* Strong glow */
+}
+
+
+/* =========================================
+   THE ANIMATIONS (Keyframes)
+   ========================================= */
+
+@keyframes pulseRed {
+    0%, 100% { box-shadow: 0 0 5px rgba(255, 0, 0, 0); border-color: rgba(255,0,0,0.3); }
+    50% { box-shadow: 0 0 15px rgba(255, 0, 0, 0.6); border-color: #ff0000; }
+}
+
+@keyframes pulseGold {
+    0%, 100% { box-shadow: 0 0 5px rgba(255, 215, 0, 0); border-color: rgba(255,215,0,0.3); }
+    50% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.5); border-color: #FFD700; }
+}
+
+@keyframes electricGold {
+    0% { box-shadow: 0 0 2px rgba(255, 215, 0, 0.2); border-color: #b8860b; }
+    100% { box-shadow: 0 0 15px rgba(255, 215, 0, 0.8); border-color: #FFFacd; }
+}
+
+@keyframes deepPowerGold {
+    0% { box-shadow: 0 0 10px rgba(255, 140, 0, 0.2); border-color: #ff8c00; transform: scale(1); }
+    50% { box-shadow: 0 0 25px rgba(255, 215, 0, 0.6); border-color: #ffd700; transform: scale(1.01); }
+    100% { box-shadow: 0 0 10px rgba(255, 140, 0, 0.2); border-color: #ff8c00; transform: scale(1); }
+}
+
+@keyframes pulseGod {
+    0%, 100% { box-shadow: 0 0 10px rgba(255, 0, 50, 0.1); border-color: #8b0000; }
+    50% { box-shadow: 0 0 25px rgba(255, 50, 50, 0.7); border-color: #ff4500; }
+}
+
+@keyframes pulseBlue {
+    0%, 100% { box-shadow: 0 0 10px rgba(0, 191, 255, 0.2); border-color: #00008b; }
+    50% { box-shadow: 0 0 30px rgba(0, 191, 255, 0.7); border-color: #00bfff; }
+}
+
+@keyframes instinctSign {
+    /* Simulates heat shimmer / vibration */
+    0% { box-shadow: 0 0 5px rgba(100, 149, 237, 0.3); border-color: #4169e1; }
+    100% { box-shadow: 0 0 12px rgba(100, 149, 237, 0.6); border-color: #87cefa; }
+}
+
+@keyframes heatShimmer { /* Simulates heat shimmer / vibration */
+    0% { box-shadow: 0 0 5px rgba(100, 149, 237, 0.3); border-color: #4169e1; }
+    100% { box-shadow: 0 0 12px rgba(100, 149, 237, 0.6); border-color: #87cefa; }
+}
+
+@keyframes masteredUI {
+    0% { 
+        box-shadow: 0 0 15px rgba(255, 255, 255, 0.3), inset 0 0 10px rgba(255,255,255,0.1); 
+        border-color: silver;
+    }
+    50% { 
+        box-shadow: 0 0 40px rgba(255, 255, 255, 0.8), inset 0 0 20px rgba(255,255,255,0.4); 
+        border-color: #fff; 
+        transform: scale(1.02);
+    }
+    100% { 
+        box-shadow: 0 0 15px rgba(255, 255, 255, 0.3), inset 0 0 10px rgba(255,255,255,0.1); 
+        border-color: #c0c0c0;
     }
 }
