@@ -811,3 +811,30 @@ body.view-bio .content-wrapper {
         /* object-fit: contain; */ 
     }
 }
+/* =========================================
+   FIX: FORCE FULL VIDEO ON LANDSCAPE PHONES
+   ========================================= */
+
+/* Target screens up to 1024px wide (covers all landscape phones) */
+@media (max-width: 1024px) {
+    .bg-video {
+        /* Reset the 'fill' rules */
+        min-width: auto !important;
+        min-height: auto !important;
+        
+        /* Force it to fit inside the screen boundaries */
+        width: 100% !important;
+        height: 100% !important;
+        
+        /* 'contain' ensures NO cropping happens (Shows Black Bars if needed) */
+        object-fit: contain !important; 
+        
+        /* Ensure the background behind the video is black (for the bars) */
+        background-color: #000;
+    }
+    
+    /* Optional: Ensure the container doesn't overflow */
+    .video-background-manager {
+        background-color: #000;
+    }
+}
