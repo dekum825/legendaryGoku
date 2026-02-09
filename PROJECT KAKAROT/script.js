@@ -7,28 +7,37 @@ document.addEventListener('DOMContentLoaded', () => {
     const body = document.body;
 
 
+    /* =========================================
+       FIXED ASCEND BUTTON (Unlocks Scroll)
+       ========================================= */
     if (activateBtn && bioSection) {
         activateBtn.addEventListener('click', (e) => {
             e.preventDefault();
             
-
             activateBtn.classList.add('launching-btn');
 
-
+            // 1. Temporarily lock snap for smooth scroll
             html.style.scrollSnapType = 'none';
             body.style.scrollSnapType = 'none';
+            
             bioSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
-
+            // 2. Activate Gallery
             setTimeout(() => {
                 const gallery = document.querySelector('.gallery-wrapper');
                 if (gallery) gallery.classList.add('gallery-active');
             }, 300);
 
-
+            // 3. FINISH ANIMATION & UNLOCK SCROLLING
             setTimeout(() => {
                 html.style.scrollSnapType = '';
                 body.style.scrollSnapType = '';
+                
+                // --- THIS WAS MISSING ---
+                html.style.overflowY = 'auto'; // Force unlock vertical scroll
+                body.style.overflowY = 'auto';
+                // ------------------------
+                
             }, 1000); 
         });
     }
