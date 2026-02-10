@@ -944,4 +944,65 @@ body.view-transform .transform-card { opacity: 0; animation: cardEntrance 0.6s e
         object-fit: fill !important; 
     }
 }
+/* =========================================
+   ROTATE DEVICE OVERLAY (Force Landscape)
+   ========================================= */
+#rotate-device-overlay {
+    display: none; /* Hidden by default */
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: #000;
+    z-index: 99999; /* On top of everything */
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+/* The Phone Icon */
+.rotate-icon {
+    width: 60px; height: 100px;
+    border: 4px solid #FFD600;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    animation: rotatePhone 2s infinite ease-in-out;
+    position: relative;
+}
+/* Screen line inside phone */
+.rotate-icon::before {
+    content: ""; position: absolute;
+    top: 10px; left: 50%; transform: translateX(-50%);
+    width: 40px; height: 3px; background: #fff;
+}
+
+/* The Animation: Portrait -> Landscape */
+@keyframes rotatePhone {
+    0% { transform: rotate(0deg); opacity: 1; }
+    40% { transform: rotate(90deg); opacity: 1; }
+    80% { transform: rotate(90deg); opacity: 0; } /* Pause */
+    100% { transform: rotate(0deg); opacity: 0; } /* Reset */
+}
+
+#rotate-device-overlay h2 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+}
+#rotate-device-overlay p {
+    color: #fff; font-family: sans-serif; font-size: 1rem;
+}
+
+/* =========================================
+   TRIGGER: ONLY SHOW ON MOBILE PORTRAIT
+   ========================================= */
+@media only screen and (orientation: portrait) and (max-width: 768px) {
+    #rotate-device-overlay {
+        display: flex !important; /* SHOW IT */
+    }
+    
+    /* Hide the main site so they can't scroll */
+    .sticky-goku-header, .content-scroller {
+        display: none !important;
+    }
+}
 
