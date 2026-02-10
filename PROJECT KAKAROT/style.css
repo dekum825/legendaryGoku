@@ -1,0 +1,947 @@
+/* =========================================
+   1. GLOBAL RESET
+   ========================================= */
+body {
+    margin: 0; padding: 0; width: 100%; min-height: 100vh; 
+    overflow-y: hidden; overflow-x: hidden; 
+    background-color: #000; scroll-behavior: smooth; touch-action: auto; 
+}
+::-webkit-scrollbar { width: 10px; }
+::-webkit-scrollbar-track { background: #111; }
+::-webkit-scrollbar-thumb { background: #FFD600; border-radius: 5px; border: 2px solid #000; }
+/* =========================================
+   GLOBAL FONTS (UPDATED: CLEANER & THINNER)
+   ========================================= */
+
+/* Replace the thick 'Bangers' font with 'Rajdhani' */
+.dragon-ball-font, h2, .main-menu-btn, .stat-box span, .db-notif-content h3 { 
+    font-family: 'Rajdhani', sans-serif !important; 
+    font-weight: 700; /* Bold but sharp */
+    text-transform: uppercase;
+    letter-spacing: 3px; /* Wider spacing looks more cinematic */
+}
+
+/* Ensure the Main Menu Buttons look sleek */
+.main-menu-btn {
+    font-size: 1.6rem; /* Slightly adjust size */
+    font-weight: 600;
+}
+
+/* Update the Scouter/Tech font to match if you want (Optional, or keep Courier) */
+.tech-font, .scouter-readout p, .stat-row, .transform-card h3 , #back-btn, #back-btn-2, #back-btn-scouter, #back-btn-feedback { 
+    font-family: 'Rajdhani', sans-serif !important; 
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+/* =========================================
+   2. VIDEO BACKGROUNDS
+   ========================================= */
+.video-background-manager {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100dvh;
+    z-index: -1; overflow: hidden; background: #000;
+}
+.bg-video {
+    min-width: 100%; min-height: 100%; width: auto; height: auto;
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    object-fit: cover; transition: opacity 0.5s ease; opacity: 0; z-index: 0;
+}
+body.view-intro .video-a, body.view-bio .video-b, body.view-transform .video-c,
+body.view-scouter .video-d, body.view-feedback .video-e { opacity: 1 !important; z-index: 1; }
+
+/* =========================================
+   3. HEADER
+   ========================================= */
+.sticky-goku-header {
+    position: fixed; top: 0; left: 0; width: 100%; z-index: 5000;
+    padding: 20px 40px; transition: all 0.4s ease-in-out; pointer-events: none;
+}
+.sticky-goku-header * { pointer-events: auto; }
+.goku-logo-img {
+    height: 150px; width: auto; display: block;
+    filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.8)); transition: height 0.4s;
+}
+body:not(.view-intro) .sticky-goku-header { padding: 10px 40px; background: linear-gradient(to bottom, rgba(0,0,0,0.9), transparent); }
+body:not(.view-intro) .goku-logo-img { height: 80px; }
+#fullscreen-btn {
+    font-size: 1.2rem; padding: 5px 15px; border-radius: 20px;
+    background: #FFD600; color: #000; border: 2px solid #000;
+    box-shadow: 0 0 10px #FFD600; cursor: pointer; transition: transform 0.2s;
+}
+
+/* =========================================
+   4. INTRO SECTIONS (Buttons on RIGHT) - CLEANER VERSION
+   ========================================= */
+#intro { height: 100vh; width: 100%; position: relative; }
+
+.mobile-intro-layout { 
+    height: 100%; 
+    display: flex; 
+    justify-content: flex-end !important; 
+    align-items: center;
+    padding-right: 10% !important; 
+}
+
+.button-container { display: flex; flex-direction: column; gap: 15px; align-items: center; }
+
+/* CLEANER MAIN MENU BUTTON STYLE */
+.main-menu-btn {
+    font-family: 'Bangers', cursive; font-size: 1.8rem; letter-spacing: 2px;
+    border-radius: 50px; padding: 15px 40px; 
+    /* Removed glowing border, added subtle solid border */
+    border: 3px solid rgba(255,255,255,0.2);
+    cursor: pointer; transition: all 0.2s ease-in-out; position: relative; overflow: hidden;
+    text-transform: uppercase; width: 350px; text-align: center;
+    /* Removed intense text shadow */
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+    /* Subtle shadow instead of intense glow */
+    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+}
+
+/* Keep the Rumble and Movement on Hover */
+.main-menu-btn:hover { 
+    transform: scale(1.02) translateX(-5px); 
+    filter: brightness(1.1); /* Subtle brightening instead of intense glow */
+    box-shadow: 0 8px 15px rgba(0,0,0,0.4); /* Deeper shadow on hover */
+    /* Rumble animation is kept via the separate rule at the bottom of CSS */
+}
+
+/* Darker, Less Saturated Gradients */
+#activate-btn { background: linear-gradient(to bottom, #c7a000, #a65c00); color: #fff; }
+#transform-btn { background: linear-gradient(to bottom, #007ebd, #0056b3); color: #fff; }
+#scouter-menu-btn { background: linear-gradient(to bottom, #5cb85c, #4cae4c); color: #fff; }
+#feedback-menu-btn { background: linear-gradient(to bottom, #9933cc, #660099); color: #fff; }
+
+/* =========================================
+   5. BIOGRAPHY
+   ========================================= */
+#biography { 
+    height: 100vh; width: 100%; position: relative; 
+    display: flex; flex-direction: column; justify-content: flex-end; align-items: center;
+    padding-bottom: 20px;
+}
+.content-wrapper { margin-bottom: 30px; width: 100%; max-width: 900px; padding-left: 50px; }
+
+.glass-card {
+    background: rgba(0, 0, 0, 0.75); backdrop-filter: blur(10px);
+    border-radius: 15px; border-left: 5px solid #FFD600;
+    padding: 40px; display: inline-block;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+.floating-card { animation: floatAnim 4s ease-in-out infinite; }
+@keyframes floatAnim { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+
+.bio-text { font-size: 1.4rem; line-height: 1.6; text-shadow: 1px 1px 2px #000; }
+.separator-line { height: 2px; width: 100%; background: #FFD600; margin: 10px 0 20px 0; }
+
+.gallery-wrapper { width: 100vw; overflow: hidden; white-space: nowrap; }
+.gallery-track { display: inline-flex; animation: scrollLoopLeft 25s linear infinite; }
+.gallery-track img { 
+    width: 250px; height: 140px; object-fit: cover; margin-right: 0; 
+    border: 2px solid #F1C40F; border-radius: 0; 
+}
+@keyframes scrollLoopLeft { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+/* =========================================
+   6. TRANSFORMATIONS (Grid System)
+   ========================================= */
+#transformations {
+    height: 100vh; width: 100%; position: relative; 
+    display: flex; flex-direction: column; justify-content: flex-end; align-items: center;
+    padding-bottom: 50px;
+}
+.transform-grid-wrapper { width: 90vw; max-height: 60vh; overflow-y: auto; padding: 20px; background: rgba(0,0,0,0.5); border-radius: 20px; }
+.transform-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+
+/* Enhanced Card Style */
+.transform-card {
+    background: linear-gradient(to bottom, rgba(40,40,40,0.9), rgba(10,10,10,0.95));
+    border: 2px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 15px; text-align: center;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+    cursor: pointer; position: relative; overflow: hidden;
+}
+.transform-card img { 
+    width: 100px; height: 100px; object-fit: cover; border-radius: 50%; 
+    margin: 0 auto 10px; display: block; border: 3px solid #fff;
+    transition: all 0.3s;
+}
+.transform-card h3 { 
+    color: #FFD600; margin: 0; font-size: 1.4rem; 
+    font-family: 'Bangers', cursive; letter-spacing: 1px;
+    text-shadow: 2px 2px 0px #000;
+}
+.transform-card p { display: none; }
+
+/* HOVER EFFECTS */
+.transform-card:hover { 
+    transform: translateY(-15px) scale(1.05); 
+    border-color: #00C6FF; 
+    box-shadow: 0 0 25px rgba(0, 198, 255, 0.5), inset 0 0 20px rgba(0,0,0,0.8);
+}
+.transform-card:hover img { border-color: #FFD600; transform: rotate(5deg) scale(1.1); }
+.transform-card:hover h3 { color: #fff; }
+
+/* Staggered Entrance Animation */
+body.view-transform .transform-card { opacity: 0; animation: cardEntrance 0.6s ease-out forwards; }
+@keyframes cardEntrance { from { opacity: 0; transform: translateY(50px); } to { opacity: 1; transform: translateY(0); } }
+.transform-card:nth-child(1) { animation-delay: 0.1s; } .transform-card:nth-child(2) { animation-delay: 0.2s; }
+.transform-card:nth-child(3) { animation-delay: 0.3s; } .transform-card:nth-child(4) { animation-delay: 0.4s; }
+.transform-card:nth-child(5) { animation-delay: 0.5s; } .transform-card:nth-child(6) { animation-delay: 0.6s; }
+.transform-card:nth-child(7) { animation-delay: 0.7s; } .transform-card:nth-child(8) { animation-delay: 0.8s; }
+
+/* =========================================
+   PROGRESSIVE POWER LEVELS (RESTORED!)
+   ========================================= */
+
+/* KAIOKEN (Level 1) - Slow Red Pulse */
+.transform-card:nth-child(1) { animation: pulseRed 3s infinite ease-in-out; border-color: rgba(255, 0, 0, 0.3); }
+
+/* SUPER SAIYAN (Level 2) - Steady Gold Glow */
+.transform-card:nth-child(2) { animation: pulseGold 2.5s infinite ease-in-out; border-color: rgba(255, 215, 0, 0.3); }
+
+/* SUPER SAIYAN 2 (Level 3) - Sharp Gold + Electricity */
+.transform-card:nth-child(3) { animation: electricGold 0.8s infinite alternate; }
+
+/* SUPER SAIYAN 3 (Level 4) - Deep Gold Power */
+.transform-card:nth-child(4) { animation: deepPowerGold 2s infinite ease-in-out; box-shadow: 0 0 10px rgba(255, 215, 0, 0.2); }
+
+/* SUPER SAIYAN GOD (Level 5) - Fiery Red Aura */
+.transform-card:nth-child(5) { animation: pulseGod 2s infinite ease-in-out; }
+
+/* SUPER SAIYAN BLUE (Level 6) - Calm Cyan Power */
+.transform-card:nth-child(6) { animation: pulseBlue 2s infinite ease-in-out; }
+
+/* UI SIGN (Level 7) - Unstable Silver/Blue Heat */
+.transform-card:nth-child(7) { animation: instinctSign 0.1s infinite alternate; }
+
+/* MASTERED UI (Level 8) - Godly Silver/White Limit Breaker */
+.transform-card:nth-child(8) { animation: masteredUI 1.5s infinite ease-in-out; box-shadow: 0 0 15px rgba(255, 255, 255, 0.5); }
+
+
+/* =========================================
+   KEYFRAME ANIMATIONS
+   ========================================= */
+@keyframes pulseRed {
+    0%, 100% { box-shadow: 0 0 5px rgba(255, 0, 0, 0); border-color: rgba(255,0,0,0.3); }
+    50% { box-shadow: 0 0 15px rgba(255, 0, 0, 0.6); border-color: #ff0000; }
+}
+@keyframes pulseGold {
+    0%, 100% { box-shadow: 0 0 5px rgba(255, 215, 0, 0); border-color: rgba(255,215,0,0.3); }
+    50% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.5); border-color: #FFD700; }
+}
+@keyframes electricGold {
+    0% { box-shadow: 0 0 2px rgba(255, 215, 0, 0.2); border-color: #b8860b; }
+    100% { box-shadow: 0 0 15px rgba(255, 215, 0, 0.8); border-color: #FFFacd; }
+}
+@keyframes deepPowerGold {
+    0% { box-shadow: 0 0 10px rgba(255, 140, 0, 0.2); border-color: #ff8c00; transform: scale(1); }
+    50% { box-shadow: 0 0 25px rgba(255, 215, 0, 0.6); border-color: #ffd700; transform: scale(1.01); }
+    100% { box-shadow: 0 0 10px rgba(255, 140, 0, 0.2); border-color: #ff8c00; transform: scale(1); }
+}
+@keyframes pulseGod {
+    0%, 100% { box-shadow: 0 0 10px rgba(255, 0, 50, 0.1); border-color: #8b0000; }
+    50% { box-shadow: 0 0 25px rgba(255, 50, 50, 0.7); border-color: #ff4500; }
+}
+@keyframes pulseBlue {
+    0%, 100% { box-shadow: 0 0 10px rgba(0, 191, 255, 0.2); border-color: #00008b; }
+    50% { box-shadow: 0 0 30px rgba(0, 191, 255, 0.7); border-color: #00bfff; }
+}
+@keyframes instinctSign {
+    0% { box-shadow: 0 0 5px rgba(100, 149, 237, 0.3); border-color: #4169e1; }
+    100% { box-shadow: 0 0 12px rgba(100, 149, 237, 0.6); border-color: #87cefa; }
+}
+@keyframes masteredUI {
+    0% { box-shadow: 0 0 15px rgba(255, 255, 255, 0.3), inset 0 0 10px rgba(255,255,255,0.1); border-color: silver; }
+    50% { box-shadow: 0 0 40px rgba(255, 255, 255, 0.8), inset 0 0 20px rgba(255,255,255,0.4); border-color: #fff; transform: scale(1.02); }
+    100% { box-shadow: 0 0 15px rgba(255, 255, 255, 0.3), inset 0 0 10px rgba(255,255,255,0.1); border-color: #c0c0c0; }
+}
+
+/* =========================================
+   7. VIEWER, SCOUTER, FEEDBACK
+   ========================================= */
+#full-view-overlay {
+    display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.9); backdrop-filter: blur(10px); z-index: 6000;
+    align-items: center; justify-content: center;
+}
+.viewer-content { display: flex; max-width: 1000px; width: 90%; align-items: center; gap: 40px; }
+#viewer-img { width: 45%; border: 4px solid #FFD600; border-radius: 15px; box-shadow: 0 0 50px rgba(255, 214, 0, 0.4); }
+.viewer-text { width: 50%; text-align: left; }
+#viewer-title { font-size: 3.5rem; margin-bottom: 20px; font-family: 'Bangers'; color: #FFD600; text-shadow: 3px 3px 0 #000; }
+#viewer-desc { font-size: 1.4rem; color: #fff; border-left: 5px solid #00C6FF; padding-left: 20px; line-height: 1.5; }
+
+#scouter, #feedback { height: 100vh; width: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+.scouter-hud {
+    border: 3px solid #00FF00; 
+    /* Darker background so text is readable */
+    background: rgba(0, 0, 0, 0.95); 
+    padding: 40px; 
+    width: 90%; 
+    max-width: 650px; 
+    position: relative; 
+    /* Inner Glow for that 'Screen' effect */
+    box-shadow: 0 0 20px rgba(0, 255, 0, 0.5), inset 0 0 50px rgba(0, 50, 0, 0.5);
+    border-radius: 10px;
+}
+.scouter-hud {
+    border: 3px solid #00FF00; 
+    /* Darker background so text is readable */
+    background: rgba(0, 0, 0, 0.95); 
+    padding: 40px; 
+    width: 90%; 
+    max-width: 650px; 
+    position: relative; 
+    /* Inner Glow for that 'Screen' effect */
+    box-shadow: 0 0 20px rgba(0, 255, 0, 0.5), inset 0 0 50px rgba(0, 50, 0, 0.5);
+    border-radius: 10px;
+}
+.stat-row {
+    font-size: 1.2rem; 
+    display: flex; 
+    justify-content: space-between; 
+    border-bottom: 1px dashed rgba(0, 255, 0, 0.4); /* Dotted line separator */
+    padding-bottom: 5px;
+    font-family: 'Courier New', monospace; /* Tech Font */
+}
+/* THE LABELS (Left Side) */
+.label { 
+    font-weight: 900; 
+    color: #00FF00; /* Pure Green */
+    text-shadow: 0 0 5px rgba(0, 255, 0, 0.8); /* Glow */
+    letter-spacing: 1px;
+}
+
+/* THE VALUES (Right Side) */
+.value { 
+    font-weight: bold;
+    color: #ccffcc; /* Slightly lighter green/white for contrast */
+    text-shadow: 0 0 8px #00FF00; /* Strong Glow */
+    text-align: right;
+}
+
+/* Blinking Animation for Power Level */
+.blinking { animation: blink 0.8s infinite; }
+@keyframes blink { 
+    0% { opacity: 1; } 
+    50% { opacity: 0.3; } 
+    100% { opacity: 1; } 
+}
+
+/* HUD Decorative Lines */
+.hud-line { position: absolute; width: 100%; height: 3px; background: #00FF00; left: 0; box-shadow: 0 0 10px #00FF00; }
+.top-line { top: 15px; } 
+.bottom-line { bottom: 15px; }
+
+/* Mobile Adjustments */
+@media (max-width: 768px) {
+    .stat-row { font-size: 0.9rem; } /* Smaller text on phone */
+    .scouter-hud { padding: 20px; }
+}
+
+.dragon-ball-font, h2 { 
+    font-family: 'Bangers', cursive; 
+}
+.tech-font { font-family: 'Courier New', monospace; font-weight: bold; }
+
+/* =========================================
+   8. MOBILE RESPONSIVE
+   ========================================= */
+@media (max-width: 1024px) {
+    .bg-video { object-fit: fill !important; }
+    .transform-grid { grid-template-columns: repeat(2, 1fr) !important; }
+}
+@media (max-width: 768px) {
+    .mobile-intro-layout { flex-direction: column !important; justify-content: center !important; padding-right: 0 !important; }
+    .transform-grid { grid-template-columns: repeat(2, 1fr) !important; }
+    .viewer-content { flex-direction: column; } 
+    #viewer-img { width: 80%; } .viewer-text { width: 100%; text-align: center; }
+}
+/* =========================================
+   RESTORED: VIEWER ENTRANCE ANIMATIONS
+   ========================================= */
+
+/* 1. Image flies in from the LEFT */
+.slide-in-left {
+    opacity: 0;
+    animation: slideLeft 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+    animation-delay: 0.1s; /* Slight delay */
+}
+
+/* 2. Text flies in from the RIGHT */
+.slide-in-right {
+    opacity: 0;
+    animation: slideRight 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+    animation-delay: 0.2s; /* Slight delay after image */
+}
+
+/* 3. The Keyframes */
+@keyframes slideLeft {
+    0% { opacity: 0; transform: translateX(-100px) scale(0.9); }
+    100% { opacity: 1; transform: translateX(0) scale(1); }
+}
+
+@keyframes slideRight {
+    0% { opacity: 0; transform: translateX(100px); }
+    100% { opacity: 1; transform: translateX(0); }
+}
+/* =========================================
+   FEEDBACK FORM (HIGH VISIBILITY FIX)
+   ========================================= */
+
+/* 1. Make the Card Darker & Clearer */
+.feedback-card.high-contrast {
+    background: rgba(0, 0, 0, 0.9) !important; /* Almost black */
+    border: 3px solid #FFD600; /* Bright Yellow Border */
+    box-shadow: 0 0 40px rgba(255, 214, 0, 0.3); /* Golden Glow */
+    max-width: 600px;
+}
+
+/* 2. Make Inputs Solid & Readable */
+.spirit-input {
+    background: rgba(255, 255, 255, 0.1) !important; /* Slight transparency */
+    border: 2px solid #FFD600 !important;
+    color: #fff !important;
+    font-size: 1.1rem;
+    padding: 15px;
+}
+
+/* Placeholder Text Color */
+.spirit-input::placeholder {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+/* Focus State (When typing) */
+.spirit-input:focus {
+    background: rgba(255, 255, 255, 0.2) !important;
+    box-shadow: 0 0 15px #FFD600;
+    outline: none;
+}
+/* =========================================
+   DRAGON BALL NOTIFICATION (Toast)
+   ========================================= */
+.db-notification {
+    position: fixed;
+    top: 30px;
+    right: -400px; /* Hidden off-screen */
+    width: 350px;
+    background: linear-gradient(135deg, #FFD600, #FF8C00); /* Goku Orange/Yellow */
+    border: 4px solid #000;
+    border-radius: 15px;
+    padding: 15px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    box-shadow: 5px 5px 0px #000, 0 0 20px rgba(255, 214, 0, 0.5);
+    z-index: 10000;
+    transition: right 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55); /* Bouncy Effect */
+    overflow: hidden;
+}
+
+/* Slide In Class */
+.db-notification.show {
+    right: 30px;
+}
+
+/* The Icon (4-Star Ball) */
+.dragon-ball-circle {
+    width: 50px; height: 50px;
+    background: radial-gradient(circle at 30% 30%, #ffeb3b, #fbc02d);
+    border: 2px solid #e65100;
+    border-radius: 50%;
+    display: flex; justify-content: center; align-items: center;
+    box-shadow: 0 0 10px rgba(255, 165, 0, 0.8);
+    position: relative;
+}
+.star { color: #d32f2f; font-size: 10px; font-weight: bold; }
+
+/* Text Styling */
+.db-notif-content h3 {
+    font-family: 'Bangers', cursive;
+    margin: 0;
+    font-size: 1.5rem;
+    color: #000;
+    letter-spacing: 1px;
+}
+.db-notif-content p {
+    font-family: sans-serif;
+    margin: 0;
+    font-size: 0.9rem;
+    color: #333;
+    font-weight: bold;
+}
+
+/* Time Bar Animation */
+.notif-progress-bar {
+    position: absolute;
+    bottom: 0; left: 0;
+    height: 5px;
+    background: #00C6FF; /* SSJ Blue Color */
+    width: 100%;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 3s linear;
+}
+.db-notification.show .notif-progress-bar {
+    transform: scaleX(1);
+}
+/* =========================================
+   DRAGON BALL THEMED RETURN BUTTONS
+   ========================================= */
+
+/* Target all return buttons */
+#back-btn, #back-btn-2, #back-btn-scouter, #back-btn-feedback {
+    font-family: 'Bangers', cursive;
+    font-size: 1.3rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    
+    /* Goku's Gi Colors */
+    color: #fff; /* White Text */
+    background: linear-gradient(180deg, #FF8C00 0%, #FF4500 100%); /* Deep Orange */
+    border: 3px solid #002244; /* Dark Navy Blue Border */
+    border-radius: 50px;
+    
+    padding: 12px 40px;
+    margin-top: 30px;
+    cursor: pointer;
+    position: relative;
+    
+    /* 3D Button Effect (Hard Shadow) */
+    box-shadow: 0 6px 0 #002244, 0 15px 20px rgba(0,0,0,0.4);
+    transition: all 0.1s ease-in-out;
+}
+
+/* HOVER: SUPER SAIYAN GLOW */
+#back-btn:hover, #back-btn-2:hover, #back-btn-scouter:hover, #back-btn-feedback:hover {
+    transform: translateY(-2px); /* Floats up */
+    background: linear-gradient(180deg, #FFD600 0%, #FFA500 100%); /* Turns Gold */
+    color: #000; /* Text turns black for contrast */
+    border-color: #000;
+    
+    /* Intense Aura Glow */
+    box-shadow: 0 6px 0 #000, 0 0 25px #FFD600, 0 0 50px #FF8C00;
+}
+
+/* ACTIVE: PRESS DOWN EFFECT */
+#back-btn:active, #back-btn-2:active, #back-btn-scouter:active, #back-btn-feedback:active {
+    transform: translateY(6px); /* Button gets pushed down */
+    box-shadow: 0 0 0 #002244, inset 0 5px 10px rgba(0,0,0,0.3); /* Shadow disappears */
+}
+
+/* OPTIONAL: Add a little star icon before the text */
+#back-btn::before, #back-btn-2::before, #back-btn-scouter::before, #back-btn-feedback::before {
+    content: "★ ";
+    color: #FFFF00;
+    margin-right: 5px;
+}
+#back-btn:hover::before, #back-btn-2:hover::before, #back-btn-scouter:hover::before, #back-btn-feedback:hover::before {
+    color: #000;
+}
+/* =========================================
+   5 NEW DRAGON BALL FEATURES
+   ========================================= */
+
+/* --- FEATURE 1: POWER POLE SCROLL BAR --- */
+#power-pole-container {
+    position: fixed; top: 0; left: 0; width: 100%; height: 8px;
+    z-index: 9999; background: rgba(0,0,0,0.3);
+}
+#power-pole {
+    height: 100%; width: 0%;
+    background: #e70000; /* Nyoibo Red */
+    border-radius: 0 4px 4px 0;
+    box-shadow: 0 0 10px #e70000;
+    transition: width 0.1s linear;
+}
+
+
+/* --- FEATURE 3: KI CURSOR (PC Only) --- */
+#ki-cursor {
+    position: fixed; width: 30px; height: 30px;
+    background: radial-gradient(circle, #fff, #00C6FF 40%, transparent 70%);
+    border-radius: 50%; pointer-events: none; z-index: 9999;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 20px #00C6FF;
+    mix-blend-mode: screen;
+    transition: transform 0.05s linear; /* Smooth lag */
+}
+/* Hide on mobile */
+@media (max-width: 1024px) { #ki-cursor { display: none; } }
+
+
+/* =========================================
+   SCOUTER ANALYSIS PANEL (New Description Style)
+   ========================================= */
+
+/* The Container */
+.viewer-text-panel {
+    width: 50%;
+    text-align: left;
+    display: flex; flex-direction: column; gap: 20px;
+}
+
+/* The Holographic Text Box */
+.scouter-readout {
+    background: rgba(0, 20, 0, 0.6); /* Dark Green tint */
+    border: 1px solid #00FF00;
+    padding: 20px;
+    border-radius: 5px;
+    position: relative;
+    box-shadow: 0 0 15px rgba(0, 255, 0, 0.2);
+    min-height: 120px; /* Prevent jumping */
+    
+    /* Tech Grid Pattern */
+    background-image: 
+        linear-gradient(rgba(0, 255, 0, 0.1) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 255, 0, 0.1) 1px, transparent 1px);
+    background-size: 20px 20px;
+}
+
+/* Corner Brackets (Decorations) */
+.scouter-readout::before {
+    content: ""; position: absolute; top: -2px; left: -2px;
+    width: 20px; height: 20px;
+    border-top: 3px solid #FFD600; border-left: 3px solid #FFD600;
+}
+.scouter-readout::after {
+    content: ""; position: absolute; bottom: -2px; right: -2px;
+    width: 20px; height: 20px;
+    border-bottom: 3px solid #FFD600; border-right: 3px solid #FFD600;
+}
+
+/* The Description Text */
+#viewer-desc {
+    font-family: 'Courier New', monospace;
+    font-size: 1.1rem;
+    color: #fff;
+    line-height: 1.5;
+    text-shadow: 0 0 5px #000;
+    margin: 0;
+}
+
+/* =========================================
+   BATTLE STATS (Animated Bars)
+   ========================================= */
+.battle-stats-container {
+    display: flex; flex-direction: column; gap: 10px;
+    margin-top: 10px;
+}
+
+.stat-box {
+    display: flex; align-items: center; gap: 15px;
+}
+.stat-box span {
+    font-family: 'Bangers', cursive;
+    color: #FFD600; font-size: 1.2rem; width: 40px;
+}
+
+.bar-bg {
+    flex-grow: 1; height: 12px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid #555;
+    transform: skewX(-20deg); /* Dragon Ball style angle */
+    overflow: hidden;
+}
+
+.bar-fill {
+    height: 100%; width: 0%; /* Starts empty */
+    background: linear-gradient(90deg, #FF8C00, #FFD600);
+    box-shadow: 0 0 10px #FFD600;
+    transition: width 1s cubic-bezier(0.22, 1, 0.36, 1); /* Snappy fill */
+}
+
+/* Color Variations for Bars */
+#bar-spd { background: linear-gradient(90deg, #00C6FF, #0072FF); box-shadow: 0 0 10px #00C6FF; }
+#bar-def { background: linear-gradient(90deg, #28a745, #00ff00); box-shadow: 0 0 10px #00ff00; }
+/* =========================================
+   UNIFORM DRAGON BALL RETURN BUTTONS (Orange Style)
+   ========================================= */
+/* Targets ALL Return Buttons to make them look the same */
+#back-btn, #back-btn-2, #back-btn-scouter, #back-btn-feedback {
+    font-family: 'Bangers', cursive;
+    font-size: 1.3rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    text-decoration: none !important; /* Fixes Bootstrap outlines */
+    
+    /* Goku's Gi Colors - Solid, not flashy */
+    color: #fff !important;
+    background: linear-gradient(180deg, #FF8C00 0%, #FF4500 100%) !important; /* Deep Orange */
+    border: 3px solid #002244 !important; /* Dark Navy Blue Border */
+    border-radius: 50px;
+    
+    padding: 12px 40px;
+    margin-top: 30px;
+    cursor: pointer;
+    position: relative;
+    
+    /* 3D Button Effect (Hard Shadow) instead of Glow */
+    box-shadow: 0 6px 0 #002244, 0 15px 20px rgba(0,0,0,0.4) !important;
+    transition: all 0.1s ease-in-out;
+}
+
+/* HOVER: Subtle Super Saiyan Shift */
+#back-btn:hover, #back-btn-2:hover, #back-btn-scouter:hover, #back-btn-feedback:hover {
+    transform: translateY(-2px); 
+    background: linear-gradient(180deg, #FFD600 0%, #FFA500 100%) !important; /* Turns Gold */
+    color: #002244 !important; /* Dark text */
+    border-color: #002244 !important;
+    /* removed intense aura glow */
+}
+
+/* ACTIVE: Press Down Effect */
+#back-btn:active, #back-btn-2:active, #back-btn-scouter:active, #back-btn-feedback:active {
+    transform: translateY(6px); 
+    box-shadow: 0 0 0 #002244, inset 0 5px 10px rgba(0,0,0,0.3) !important; 
+}
+
+/* CLEANER FEEDBACK SUBMIT BUTTON */
+/* Toning down the bright yellow "Fire Energy" button until clicked */
+#energy-form button[type="submit"] {
+    background: linear-gradient(to bottom, #c7a000, #a65c00) !important;
+    border: 3px solid #002244 !important;
+    color: #fff !important;
+    box-shadow: 0 6px 0 #002244 !important;
+    text-shadow: none !important;
+    transition: all 0.1s ease-in-out;
+}
+#energy-form button[type="submit"]:hover {
+    transform: translateY(-2px);
+    background: linear-gradient(180deg, #FFD600 0%, #FFA500 100%) !important;
+    color: #002244 !important;
+}
+#energy-form button[type="submit"]:active {
+     transform: translateY(6px); 
+     box-shadow: 0 0 0 #002244, inset 0 5px 10px rgba(0,0,0,0.3) !important;
+}
+/* =========================================
+   LOADING SCREEN (RESTORED)
+   ========================================= */
+#loading-screen {
+    position: fixed; 
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    height: 100%;
+    background: #000; /* Solid Black Background */
+    z-index: 20000; /* Extremely High Z-Index to sit on top of everything */
+    display: flex; 
+    flex-direction: column; 
+    justify-content: center; 
+    align-items: center;
+    transition: opacity 0.5s ease-out;
+}
+
+/* The Energy Ball Animation */
+.energy-ball {
+    width: 80px; 
+    height: 80px; 
+    border-radius: 50%;
+    /* Blue Energy Gradient */
+    background: radial-gradient(circle, #00C6FF, #0072FF);
+    /* Glowing Aura */
+    box-shadow: 0 0 30px #00C6FF, 0 0 60px #0072FF;
+    margin-bottom: 20px;
+    animation: chargeUp 0.8s infinite alternate ease-in-out;
+}
+
+@keyframes chargeUp { 
+    from { 
+        transform: scale(1); 
+        box-shadow: 0 0 30px #00C6FF; 
+    } 
+    to { 
+        transform: scale(1.3); 
+        box-shadow: 0 0 60px #00C6FF, 0 0 100px #fff; /* Flash White */
+    } 
+}
+
+/* The "Gathering Energy..." Text */
+.loading-text {
+    font-family: 'Rajdhani', sans-serif; /* Matches your new font */
+    color: #fff;
+    font-size: 1.5rem;
+    letter-spacing: 5px;
+    animation: pulseText 1s infinite alternate;
+}
+
+@keyframes pulseText {
+    from { opacity: 0.5; }
+    to { opacity: 1; text-shadow: 0 0 10px #00C6FF; }
+}
+
+/* =========================================
+   MOBILE LANDSCAPE OPTIMIZATION (Short Screens)
+   ========================================= */
+@media only screen and (orientation: landscape) and (max-height: 500px) {
+
+    /* 1. GLOBAL TEXT SHRINK */
+    /* Everything gets smaller to fit the short height */
+    html { font-size: 14px; } 
+    h2, .display-4, .display-5 { font-size: 2rem !important; margin-bottom: 5px !important; }
+    
+    /* 2. HEADER (Make it tiny or it blocks the view) */
+    .sticky-goku-header {
+        padding: 5px 20px !important;
+    }
+    .goku-logo-img {
+        height: 40px !important; /* Tiny Logo */
+    }
+    #fullscreen-btn {
+        font-size: 0.8rem !important;
+        padding: 2px 10px !important;
+    }
+    /* 3. MAIN MENU (The 2x2 Grid Fix) */
+    /* Instead of a long list, we make a square grid */
+    .mobile-intro-layout {
+        justify-content: center !important;
+        padding-right: 0 !important;
+        align-items: center !important;
+    }
+
+    .button-container {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr; /* 2 Buttons per row */
+        gap: 10px !important;
+        width: 80%;
+        max-width: 500px;
+    }
+
+    .main-menu-btn {
+        width: 100% !important; /* Fill the grid cell */
+        font-size: 1rem !important;
+        padding: 8px 0 !important; /* Slim buttons */
+        height: auto !important;
+    }
+
+    /* 1. Reset Container Spacing */
+    #biography .content-wrapper {
+        padding-left: 0 !important; /* Remove the 50px desktop padding */
+        width: 90% !important;
+        height: 60%;
+        display: flex;
+        justify-content: center;
+        margin-bottom: 5px !important; /* Reduce gap above gallery */
+    }
+
+    /* 2. Shrink the Glass Card */
+    #biography .glass-card {
+        width: 90% !important; /* Prevent it from touching edges */
+        padding: 15px !important; /* Reduce internal padding (was 40px) */
+        margin: 0 auto; /* Force center alignment */
+    }
+
+    /* 3. Shrink the Title ("THE LEGEND") */
+    #biography h2.display-5 {
+        font-size: 2rem !important; /* Much smaller title */
+        margin-bottom: 10px !important;
+        text-shadow: 1px 1px 0 #000 !important; /* Less intense shadow */
+    }
+
+    /* 4. Shrink the Description Text */
+    #biography .bio-text {
+        font-size: 0.9rem !important; /* Readable but compact */
+        line-height: 1.3 !important; /* Tighter line spacing */
+    }
+
+    /* 5. Shrink the Separator Line */
+    .separator-line {
+        margin: 5px 0 10px 0 !important;
+    }
+
+    /* 6. Shrink the Return Button */
+    #biography #back-btn {
+        margin-top: 10px !important;
+        padding: 8px 20px !important;
+        font-size: 0.85rem !important;
+        width: auto !important; /* Don't stretch full width */
+    }
+
+    /* 4. TRANSFORMATIONS (Tiny Grid) */
+    .transform-grid-wrapper {
+        max-height: 70vh !important; /* Use mostly width */
+        width: 80vw !important;
+    }
+    .transform-grid {
+        grid-template-columns: repeat(6, 1fr) !important; /* More cols, less scrolling */
+        gap: 5px !important;
+    }
+    .transform-card { padding: 5px !important; }
+    .transform-card img { width: 40px !important; height: 40px !important; }
+    .transform-card h3 { display: none !important; } /* Hide text to save space, show on hover/click */
+
+    /* 5. SCOUTER HUD (Wide Layout) */
+    /* Put the title on the left and stats on the right */
+    .scouter-hud {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        padding: 10px 20px !important;
+        max-width: 800px;
+        gap: 20px;
+    }
+    .scouter-content {
+        text-align: left !important;
+        display: flex;
+        gap: 20px;
+        align-items: center;
+        width: 100%;
+    }
+    .scouter-content h2 { 
+        width: 30%; 
+        font-size: 1.5rem !important; 
+        line-height: 1.2;
+    }
+    .scouter-grid {
+        width: 70%;
+        margin-top: 0 !important;
+        padding: 10px !important;
+    }
+    .stat-row { font-size: 0.8rem !important; }
+
+    /* 6. FEEDBACK FORM (Side-by-Side) */
+    .feedback-card {
+        padding: 15px !important;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 20px;
+        max-width: 700px;
+    }
+    .feedback-card h2 { font-size: 1.5rem !important; }
+    .feedback-card p { display: none !important; } /* Hide subtext to save space */
+    #energy-form { width: 60%; }
+    .spirit-input { padding: 5px !important; font-size: 0.9rem !important; }
+    
+    /* 7. GALLERY (Film Strip) */
+    .gallery-track img {
+        height: 80px !important; /* Short film strip */
+        width: auto !important;
+    }
+
+    /* 8. RETURN BUTTONS (Tiny) */
+    #back-btn, #back-btn-2, #back-btn-scouter, #back-btn-feedback {
+        margin-top: 5px !important;
+        padding: 5px 15px !important;
+        font-size: 0.8rem !important;
+    }
+}
+/* =========================================
+   MOBILE LANDSCAPE: FIX BACKGROUND VIDEO
+   ========================================= */
+@media only screen and (orientation: landscape) and (max-height: 500px) {
+    
+    .bg-video {
+        /* 1. Force Video to fit the EXACT screen size */
+        width: 100vw !important;
+        height: 100vh !important;
+        
+        /* 2. Remove the centering/cropping logic */
+        top: 0 !important; 
+        left: 0 !important;
+        transform: none !important; 
+        
+        /* 3. This forces the whole video to show (might stretch slightly) */
+        object-fit: fill !important; 
+    }
+}
+
